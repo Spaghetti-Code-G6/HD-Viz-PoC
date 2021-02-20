@@ -26,9 +26,27 @@ function make_readable(str){
 	return aux;
 }
 
-function create_axis(scales){
+function create_axis(axis){
 
+	//ONLY THE CREATION
+	console.log("Axis creation");
+	if(axis == "x"){
 
+		console.log(x_scales.length);
+		let current_x_axis;
+
+		x_scales.forEach((element) => {
+			x_axis.push(d3.axisBottom(element))});
+		
+	}else if(axis == "y"){
+
+		console.log(y_scales.length)		
+		y_scales.forEach((element) => y_axis.push(d3.axisBottom(element)));
+		
+	}else{
+
+		alert("Wrong parameter in creation of axis");
+	}
 }
 
 function create_scales(){
@@ -77,8 +95,8 @@ function create_scales(){
 				max = parseFloat(`${row[element]}`) > max ? parseFloat(`${row[element]}`) : max;
 			});
 
-			console.log("min: " + min);
-			console.log("max: " + max);
+			//console.log("min: " + min);
+			//console.log("max: " + max);
 
 			let beginning_x = padding + aux_index * space_between_charts + aux_index * x_space_for_single_chart;
 			//console.log(beginning_x);
@@ -102,6 +120,11 @@ function create_scales(){
 
 	});
 
+}
+
+function plot(){
+
+	
 }
 
 function adapt_scatter_plot(obj, checked){
@@ -133,9 +156,6 @@ function adapt_scatter_plot(obj, checked){
 	}
 
 	//ONLY CHECKING NUMBER OF ELEMENTS SELECTED
-
-
-
 }	
 
 function draw(dataset){
@@ -157,13 +177,15 @@ function draw(dataset){
 
 
 		//TODO: ADD A SELECT
-		
+
 	}
 
 	//console.log(tags);
 
 	create_scales();
-	create_axis(x_scales);
-	create_axis(y_scales);
+	create_axis("x");
+	create_axis("y");
+
+	plot();
 
 }
