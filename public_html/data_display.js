@@ -4,6 +4,7 @@ const w = 1300;
 const h = 850;
 const padding = 30;
 const space_between_charts = 10;
+const vertical_space = 10;
 
 //sepal length, sepal width, petal length, petal width
 

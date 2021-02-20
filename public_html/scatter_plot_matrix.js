@@ -2,8 +2,13 @@ let x_scales = [];
 let y_scales = [];
 let tags = [];
 const max_dimensions = 5;
+let indexes = [];
 let x_axis = [];
 let y_axis = [];
+const number_of_ticks = 7;
+
+const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
 
 
 function clear_all(){
@@ -13,6 +18,7 @@ function clear_all(){
 	tags = [];
 	x_axis = [];
 	y_axis = [];
+	indexes = [];
 	document.getElementById("dimensionSelection").innerHTML = "";
 	d3.select("svg").selectAll("*").remove();
 }
@@ -36,17 +42,22 @@ function create_axis(axis){
 		let current_x_axis;
 
 		x_scales.forEach((element) => {
-			x_axis.push(d3.axisBottom(element))});
+			x_axis.push(d3.axisBottom(element).ticks(number_of_ticks))
+		});
 		
 	}else if(axis == "y"){
 
-		console.log(y_scales.length)		
-		y_scales.forEach((element) => y_axis.push(d3.axisBottom(element)));
+		//console.log(y_scales.length)		
+		y_scales.forEach((element) => {
+			y_axis.push(d3.axisLeft(element).ticks(number_of_ticks))
+		});
 		
 	}else{
 
 		alert("Wrong parameter in creation of axis");
 	}
+
+	console.log("Done axis")
 }
 
 function create_scales(){
@@ -60,7 +71,6 @@ function create_scales(){
 	console.log(dataset[0]);
 
 	let values = Object.values(datas);
-	let indexes = [];
 	let i = 0;
 
 	values.forEach((element)=>{
@@ -74,11 +84,14 @@ function create_scales(){
 
 	console.log(indexes);
 
-	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
-	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+	
 	let beginning_x;
 	let beggining_y = padding;
 	let aux_index = 0;
+
+	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
+
 
 	tags.forEach( (element, j)=> {
 
@@ -98,7 +111,6 @@ function create_scales(){
 			//console.log("min: " + min);
 			//console.log("max: " + max);
 
-			let beginning_x = padding + aux_index * space_between_charts + aux_index * x_space_for_single_chart;
 			//console.log(beginning_x);
 
 			current_x_scale = d3.scaleLinear()
@@ -124,7 +136,33 @@ function create_scales(){
 
 function plot(){
 
-	
+	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
+
+	const svg = d3.select("svg");
+
+	y_scales.forEach((element, i)=>{
+
+		let beggining_y = padding + i * vertical_space + i * y_space_for_single_chart;
+		
+		x_scales.forEach((inner_element, j)=> {
+
+			let beginning_x = padding + j * space_between_charts + j * x_space_for_single_chart;
+			//console.log(beginning_x);
+
+			svg.append("g")
+			   .attr("transform", "translate(" + beginning_x + ", " + beggining_y + ")")
+			   .call(y_axis[i])
+			   //.attr("fill", "black")
+			   .attr("class", "axis");
+
+			svg.append("g")
+			   .attr("transform", "translate(" + beginning_x + ", " + (beggining_y + y_space_for_single_chart) + ")")
+			   .call(x_axis[i])
+			   //.attr("fill", "black")
+			   .attr("class", "axis");			
+		});
+	});
 }
 
 function adapt_scatter_plot(obj, checked){
