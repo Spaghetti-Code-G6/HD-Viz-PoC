@@ -1,0 +1,27 @@
+body{
+
+	color: #fff;
+	background-color: #212121;
+}
+
+#various_buttons{
+
+	display: inline-block;
+	margin-bottom: 3em;
+}
+
+.no_display{
+
+	display: none;
+}
+
+#dimensionSelection input{
+
+	margin-right: .5em;
+}
+
+svg{
+
+	background-color: #000;
+	margin: auto;
+}
