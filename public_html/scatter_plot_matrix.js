@@ -11,12 +11,15 @@ function clear_all(){
 	x_scales = [];
 	y_scales = [];
 	tags = [];
+	x_axis = [];
+	y_axis = [];
 	document.getElementById("dimensionSelection").innerHTML = "";
 	d3.select("svg").selectAll("*").remove();
 }
 
 function make_readable(str){
 
+	//TODO: Migliorarle
 	aux = str.key.replace("_", " ");
 	aux = aux.charAt(0).toUpperCase() + aux.slice(1);
 
@@ -25,12 +28,79 @@ function make_readable(str){
 
 function create_axis(scales){
 
-	let current x_scale;
-	let current_y_scale;
+
 }
 
-function create_scales(dimensions){
+function create_scales(){
 
+	//console.log("creazione scale")
+	let current_x_scale;
+	let current_y_scale;
+	let numeric_dimensions = 0;
+	
+	let datas = dataset[0];
+	console.log(dataset[0]);
+
+	let values = Object.values(datas);
+	let indexes = [];
+	let i = 0;
+
+	values.forEach((element)=>{
+
+		if(isNaN(element)){
+		
+			indexes.push(i);
+		}
+		i++;
+	});
+
+	console.log(indexes);
+
+	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
+	let beginning_x;
+	let beggining_y = padding;
+	let aux_index = 0;
+
+	tags.forEach( (element, j)=> {
+
+		if(indexes.indexOf(j) == -1){
+
+			console.log(element);
+			let min = Number.POSITIVE_INFINITY;
+			let max = Number.NEGATIVE_INFINITY;
+
+			//console.log(parseFloat(`${datas[element]}`))
+			dataset.forEach((row)=> {
+
+				min = parseFloat(`${row[element]}`) < min ? parseFloat(`${row[element]}`) : min;
+				max = parseFloat(`${row[element]}`) > max ? parseFloat(`${row[element]}`) : max;
+			});
+
+			console.log("min: " + min);
+			console.log("max: " + max);
+
+			let beginning_x = padding + aux_index * space_between_charts + aux_index * x_space_for_single_chart;
+			//console.log(beginning_x);
+
+			current_x_scale = d3.scaleLinear()
+								.domain([min, max])
+								.range([0, x_space_for_single_chart])
+
+			//console.log(current_x_scale)
+
+			current_y_scale = d3.scaleLinear()
+								.domain([min, max])
+								.range([0, y_space_for_single_chart])
+
+			x_scales.push(current_x_scale);
+			y_scales.push(current_y_scale);
+
+			aux_index++;
+
+		}
+
+	});
 
 }
 
@@ -62,6 +132,8 @@ function adapt_scatter_plot(obj, checked){
 		}
 	}
 
+	//ONLY CHECKING NUMBER OF ELEMENTS SELECTED
+
 
 
 }	
@@ -73,7 +145,7 @@ function draw(dataset){
 	let element = document.getElementById("dimensionSelection");
 
 	//console.log(dataset[0]);
-
+	
 	for (key in dataset[0]){
 
 		tags.push(key);
@@ -84,16 +156,13 @@ function draw(dataset){
 							 ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`
 
 
-		//AGGIUNGERE SELECT PER CAPIRE QUALE DIMENSIONE VA CON I COLORI
-
-
-
+		//TODO: ADD A SELECT
+		
 	}
 
-	console.log(tags);
-	
+	//console.log(tags);
 
-	create_scales(tags);
+	create_scales();
 	create_axis(x_scales);
 	create_axis(y_scales);
 

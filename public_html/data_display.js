@@ -1,8 +1,9 @@
 let dataset = [];
 
 const w = 1300;
-const h = 650;
+const h = 850;
 const padding = 30;
+const space_between_charts = 10;
 
 //sepal length, sepal width, petal length, petal width
 
@@ -13,7 +14,7 @@ function main(){
 			   	   .attr("width", w)
 			   	   .attr("height", h);
 
-	const min_sepal_length = d3.min(dataset, (d)=>d[0]);
+	/*const min_sepal_length = d3.min(dataset, (d)=>d[0]);
 	const max_sepal_length = d3.max(dataset, (d)=>d[0]);
 
 	const min_sepal_width = d3.min(dataset, (d)=>d[1]);
@@ -56,7 +57,7 @@ function main(){
 
 	const y_scale_petal_width = d3.scaleLinear()
 								 .domain([min_petal_width, max_petal_width])
-								 .range([padding, h - padding])
+								 .range([padding, h - padding])*/
 
 	//console.log("cose");
 
