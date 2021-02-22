@@ -6,42 +6,19 @@ let indexes = [];
 let x_axis = [];
 let y_axis = [];
 const number_of_ticks = 7;
-
-const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
-const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
-
-
-function clear_all(){
-
-	x_scales = [];
-	y_scales = [];
-	tags = [];
-	x_axis = [];
-	y_axis = [];
-	indexes = [];
-	document.getElementById("dimensionSelection").innerHTML = "";
-	d3.select("svg").selectAll("*").remove();
-}
-
-function make_readable(str){
-
-	//TODO: Migliorarle
-	aux = str.key.replace("_", " ");
-	aux = aux.charAt(0).toUpperCase() + aux.slice(1);
-
-	return aux;
-}
+let valid_keys = [];
 
 function create_axis(axis){
 
 	//ONLY THE CREATION
-	console.log("Axis creation");
+	//console.log("Axis creation");
 	if(axis == "x"){
 
-		console.log(x_scales.length);
+		//console.log(x_scales.length);
 		let current_x_axis;
 
 		x_scales.forEach((element) => {
+			
 			x_axis.push(d3.axisBottom(element).ticks(number_of_ticks))
 		});
 		
@@ -57,7 +34,7 @@ function create_axis(axis){
 		alert("Wrong parameter in creation of axis");
 	}
 
-	console.log("Done axis")
+	//console.log("Done axis")
 }
 
 function create_scales(){
@@ -68,8 +45,7 @@ function create_scales(){
 	let numeric_dimensions = 0;
 	
 	let datas = dataset[0];
-	console.log(dataset[0]);
-
+	
 	let values = Object.values(datas);
 	let i = 0;
 
@@ -82,9 +58,6 @@ function create_scales(){
 		i++;
 	});
 
-	console.log(indexes);
-
-	
 	let beginning_x;
 	let beggining_y = padding;
 	let aux_index = 0;
@@ -97,7 +70,7 @@ function create_scales(){
 
 		if(indexes.indexOf(j) == -1){
 
-			console.log(element);
+			//console.log(element);
 			let min = Number.POSITIVE_INFINITY;
 			let max = Number.NEGATIVE_INFINITY;
 
@@ -108,9 +81,6 @@ function create_scales(){
 				max = parseFloat(`${row[element]}`) > max ? parseFloat(`${row[element]}`) : max;
 			});
 
-			//console.log("min: " + min);
-			//console.log("max: " + max);
-
 			//console.log(beginning_x);
 
 			current_x_scale = d3.scaleLinear()
@@ -120,7 +90,7 @@ function create_scales(){
 			//console.log(current_x_scale)
 
 			current_y_scale = d3.scaleLinear()
-								.domain([min, max])
+								.domain([max, min])
 								.range([0, y_space_for_single_chart])
 
 			x_scales.push(current_x_scale);
@@ -140,32 +110,128 @@ function plot(){
 	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
 
 	const svg = d3.select("svg");
+	const aux_data = dataset[0];
+
+	const keys = Object.keys(aux_data);
+	
+
+	keys.forEach((element)=>{
+
+		if(!isNaN(parseFloat(`${aux_data[element]}`))){
+
+			valid_keys.push(element);
+		}
+	});
+
+	//console.log(valid_keys);
+
+	convert_dataset_to_array();
+
+	//console.log(array_dataset)
+	let coord = [];
 
 	y_scales.forEach((element, i)=>{
 
-		let beggining_y = padding + i * vertical_space + i * y_space_for_single_chart;
+		let beginning_y = padding + i * vertical_space + i * y_space_for_single_chart;
+		//console.log("i: " + i);
 		
 		x_scales.forEach((inner_element, j)=> {
 
+			//console.log("j: " + j);
 			let beginning_x = padding + j * space_between_charts + j * x_space_for_single_chart;
 			//console.log(beginning_x);
 
 			svg.append("g")
-			   .attr("transform", "translate(" + beginning_x + ", " + beggining_y + ")")
+			   .attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
 			   .call(y_axis[i])
-			   //.attr("fill", "black")
-			   .attr("class", "axis");
+			   .attr("class", "axis" + (j != 0 ? " no_tick" : ""));
+
+
+			//console.log(typeof(index))
 
 			svg.append("g")
-			   .attr("transform", "translate(" + beginning_x + ", " + (beggining_y + y_space_for_single_chart) + ")")
-			   .call(x_axis[i])
-			   //.attr("fill", "black")
-			   .attr("class", "axis");			
+			   .attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
+			   .call(x_axis[j])
+			   .attr("class", "axis"  + (i != (valid_keys.length - 1) ? " no_tick" : ""));
+
+			let x_scale = x_scales[j];
+			let y_scale = y_scales[i];
+
+			array_dataset.forEach((element)=>{
+
+				let temp_coord = [];
+				
+				temp_coord.push(element[j]);//x
+				temp_coord.push(element[i]);//y
+
+				coord.push(temp_coord);
+			});
+
+			//console.log("single one done")
 		});
+
+		//console.log("row done")
+
 	});
+
+	//console.log(coord);
+
+	let aux = 0;
+
+	console.log(dataset.length)
+	console.log(valid_keys.length)
+
+
+	coord.forEach((element)=>{
+
+		const auxiliary_index = Math.floor(aux / dataset.length);
+		const x_scale_index = auxiliary_index % valid_keys.length;
+		const y_scale_index = Math.floor(auxiliary_index / valid_keys.length);
+		let x_scale = x_scales[x_scale_index];
+		let y_scale = y_scales[y_scale_index];
+
+		//console.log(y_scale_index)
+		//console.log(y_scale)
+
+		let x = padding 
+				+ x_scale(element[0])
+				+ x_scale_index * space_between_charts
+		 		+ x_scale_index * x_space_for_single_chart;
+
+
+		let y = padding
+				+ y_scale(element[1])
+				+ y_scale_index * vertical_space
+		 		+ y_scale_index * y_space_for_single_chart;
+
+		console.log(y);
+
+		svg.append("circle")
+		   .attr("cx", x)
+		   .attr("cy", y)
+		   .attr("r", 5)
+		   .attr("fill", "black");
+
+		//console.log(aux)
+
+		aux++;
+	})
+
+	console.log("done graph")
+
+	let aux1 = 0;
+	let aux2 = 0;
+
+	/*coord.forEach((element)=>{
+
+
+	});
+*/
+	//TODO: append circles
+
 }
 
-function adapt_scatter_plot(obj, checked){
+/*function adapt_scatter_plot(obj, checked){
 
 	let number_of_checked = 0;
 	let checked_values = [];
@@ -194,15 +260,19 @@ function adapt_scatter_plot(obj, checked){
 	}
 
 	//ONLY CHECKING NUMBER OF ELEMENTS SELECTED
-}	
+}*/
 
-function draw(dataset){
+function draw_scatter_plot(dataset){
+
+	if(dataset.length == 0){
+
+		alert("Dataset vuoto");
+		return;
+	}
 
 	clear_all();
 	
 	let element = document.getElementById("dimensionSelection");
-
-	//console.log(dataset[0]);
 	
 	for (key in dataset[0]){
 
@@ -214,11 +284,9 @@ function draw(dataset){
 							 ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`
 
 
-		//TODO: ADD A SELECT
+		//TODO: ADD A SELECT FOR COLORED DIMENSION
 
 	}
-
-	//console.log(tags);
 
 	create_scales();
 	create_axis("x");

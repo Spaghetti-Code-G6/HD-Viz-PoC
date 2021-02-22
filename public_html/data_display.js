@@ -3,7 +3,7 @@ let dataset = [];
 const w = 1300;
 const h = 850;
 const padding = 30;
-const space_between_charts = 10;
+const space_between_charts = 30;
 const vertical_space = 10;
 
 //sepal length, sepal width, petal length, petal width
@@ -14,60 +14,11 @@ function main(){
 			   	   .append("svg")
 			   	   .attr("width", w)
 			   	   .attr("height", h);
-
-	/*const min_sepal_length = d3.min(dataset, (d)=>d[0]);
-	const max_sepal_length = d3.max(dataset, (d)=>d[0]);
-
-	const min_sepal_width = d3.min(dataset, (d)=>d[1]);
-	const max_sepal_width = d3.max(dataset, (d)=>d[1]);
-
-	const min_petal_length = d3.min(dataset, (d)=>d[2]);
-	const max_petal_length = d3.max(dataset, (d)=>d[2]);
-
-	const min_petal_width = d3.min(dataset, (d)=>d[3]);
-	const max_petal_width = d3.max(dataset, (d)=>d[3]);
-
-	const x_scale_sepal_length = d3.scaleLinear()
-		   					     .domain([min_sepal_length, max_sepal_length])
-								 .range([padding, w - padding]);
-
-	const x_scale_sepal_width = d3.scaleLinear()
-								.domain([min_sepal_width, max_sepal_length])
-								.range([padding, w - padding])
-
-	const x_scale_petal_length = d3.scaleLinear()
-								 .domain([min_petal_length, max_petal_length])
-								 .range([padding, w - padding])
-
-	const x_scale_petal_width = d3.scaleLinear()
-								 .domain([min_petal_width, max_petal_width])
-								 .range([padding, w - padding])
-
-
-	const y_scale_sepal_length = d3.scaleLinear()
-		   					     .domain([min_sepal_length, max_sepal_length])
-								 .range([padding, h - padding]);
-
-	const y_scale_sepal_width = d3.scaleLinear()
-								.domain([min_sepal_width, max_sepal_length])
-								.range([padding, h - padding])
-
-	const y_scale_petal_length = d3.scaleLinear()
-								 .domain([min_petal_length, max_petal_length])
-								 .range([padding, h - padding])
-
-	const y_scale_petal_width = d3.scaleLinear()
-								 .domain([min_petal_width, max_petal_width])
-								 .range([padding, h - padding])*/
-
-	//console.log("cose");
-
 }
 
 function send_data(){
 
 	let file = document.getElementById("csvFile").files[0];
-	console.log(file);
 
 	const formData = new FormData();
 
@@ -76,7 +27,7 @@ function send_data(){
 	const options = {
   		method: 'POST',
   		body: formData,
-  		};
+  	};
 
 	fetch('/file', options)
 		 .then(response=> response.json())
@@ -86,6 +37,6 @@ function send_data(){
 		 	d3.csv(json.url, (data)=> {
 		 		dataset.push(data);
 		 	})
-		 	  .then(()=>draw(dataset));
+		 	  .then(()=>draw_scatter_plot(dataset));
 		  });
 }

@@ -1,5 +1,5 @@
 const express = require('express');
-const csv = require('csv-parser');
+//const csv = require('csv-parser');
 const fs = require('fs');
 const process = require('process');
 const uploader = require('express-fileupload')
@@ -16,10 +16,10 @@ app.use(express.static('public_html/'));
 app.use(uploader({
 
 	//Cambiare il primo numero per modificare la dimensione massima (in Mb) dei file csv importabili
-	limits: {fileSize: 100 * 1048576},
+	limits: {fileSize: 500 * 1048576},
 	useTempFiles: true,
 	tempFileDir: 'public_html/tmp/',
-	debug: true
+	debug: false
 }));
 
 app.post('/file', (req, res)=>{

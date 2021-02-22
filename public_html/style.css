@@ -26,14 +26,31 @@ svg{
 	margin: auto;
 }
 
-.axis{
+.axis, {
+
 	stroke: black;
 	stroke-width: .7;
+}
+
+.tick{
+
+	stroke: black;
+	fill: black;
+}
+
+.tick text{
+
+	stroke: none;
+	color: black;
+}
+
+.no_tick text{
+
+	display: none;
 }
 
 .axis path{
 
 	stroke: black;
 	fill: none;
-
 }
