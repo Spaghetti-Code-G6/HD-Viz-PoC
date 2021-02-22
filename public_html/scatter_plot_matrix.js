@@ -151,7 +151,7 @@ function plot(){
 
 			svg.append("g")
 			   .attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
-			   .call(x_axis[j])
+			   .call(x_axis[valid_keys.length - j - 1])
 			   .attr("class", "axis"  + (i != (valid_keys.length - 1) ? " no_tick" : ""));
 
 			let x_scale = x_scales[j];
@@ -185,7 +185,10 @@ function plot(){
 	coord.forEach((element)=>{
 
 		const auxiliary_index = Math.floor(aux / dataset.length);
-		const x_scale_index = auxiliary_index % valid_keys.length;
+		const x_scale_index = (auxiliary_index % valid_keys.length);
+
+		//const x_scale_index = valid_keys.length - aux_x_scale_index - 1;
+		//console.log(x_scale_index);
 		const y_scale_index = Math.floor(auxiliary_index / valid_keys.length);
 		let x_scale = x_scales[x_scale_index];
 		let y_scale = y_scales[y_scale_index];
@@ -195,8 +198,10 @@ function plot(){
 
 		let x = padding 
 				+ x_scale(element[0])
-				+ x_scale_index * space_between_charts
-		 		+ x_scale_index * x_space_for_single_chart;
+				+ (valid_keys.length - 1) * space_between_charts
+				+ (valid_keys.length - 1) * x_space_for_single_chart
+				- x_scale_index * space_between_charts
+		 		- x_scale_index * x_space_for_single_chart;
 
 
 		let y = padding
@@ -204,7 +209,7 @@ function plot(){
 				+ y_scale_index * vertical_space
 		 		+ y_scale_index * y_space_for_single_chart;
 
-		console.log(y);
+		//console.log(y);
 
 		svg.append("circle")
 		   .attr("cx", x)
@@ -231,9 +236,9 @@ function plot(){
 
 }
 
-/*function adapt_scatter_plot(obj, checked){
+function adapt_scatter_plot(obj, checked){
 
-	let number_of_checked = 0;
+	/*let number_of_checked = 0;
 	let checked_values = [];
 	console.log(obj);
 	console.log(checked);
@@ -257,10 +262,10 @@ function plot(){
 			obj.checked = false;
 			alert("Number of field selected exceeds maximum number of fields")
 		}
-	}
+	}*/
 
 	//ONLY CHECKING NUMBER OF ELEMENTS SELECTED
-}*/
+}
 
 function draw_scatter_plot(dataset){
 
