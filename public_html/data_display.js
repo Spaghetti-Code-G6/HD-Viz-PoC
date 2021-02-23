@@ -21,7 +21,6 @@ function send_data(){
 	let file = document.getElementById("csvFile").files[0];
 
 	const formData = new FormData();
-
 	formData.append('csvFile', file);
 
 	const options = {
@@ -37,6 +36,8 @@ function send_data(){
 		 	d3.csv(json.url, (data)=> {
 		 		dataset.push(data);
 		 	})
-		 	  .then(()=>draw_scatter_plot(dataset));
+		 	.then(()=>{
+		 	  	draw_scatter_plot(dataset)
+		 	  })
 		  });
 }

@@ -3,7 +3,7 @@ let array_dataset = [];
 function make_readable(str){
 
 	//TODO: Migliorarle
-	aux = str.key.replace("_", " ");
+	let aux = str.key.replace("_", " ");
 	aux = aux.charAt(0).toUpperCase() + aux.slice(1);
 
 	return aux;
