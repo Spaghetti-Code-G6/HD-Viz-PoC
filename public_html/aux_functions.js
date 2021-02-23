@@ -18,6 +18,9 @@ function clear_all(){
 	y_axis = [];
 	indexes = [];
 	array_dataset = [];
+	valid_keys = [];
+	non_numeric_keys = [];
+	non_numeric_values = [];
 	document.getElementById("dimensionSelection").innerHTML = "";
 	d3.select("svg").selectAll("*").remove();
 }

@@ -16,7 +16,6 @@ const colors = ["blue", "red", "green"];
 function create_axis(axis){
 
 	//ONLY THE CREATION
-	//console.log("Axis creation");
 	if(axis == "x"){
 
 		x_scales.forEach((element) => {
@@ -104,10 +103,13 @@ function plot(key = non_numeric_keys[0]){
 
 	let only_black = false;
 
-	if(non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length){
+	if(typeof non_numeric_keys.length  !== "undefined" ){
 
-		alert("Ci sono troppi valori in questa dimensione, i colori non sono sufficienti. Verrà usato il nero per tutti i colori")
-		only_black = true;
+		if(non_numeric_keys.indexOf(key) != -1 && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length){
+
+			//alert("Ci sono troppi valori in questa dimensione, i colori non sono sufficienti. Verrà usato il nero per tutti i colori")
+			only_black = true;
+		}
 	}
 
 	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
@@ -135,6 +137,8 @@ function plot(key = non_numeric_keys[0]){
 			   .call(y_axis[i])
 			   .attr("class", "axis" + (j != 0 ? " no_tick" : ""));
 
+			//console.log(x_axis);
+
 			svg.append("g")
 			   .attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
 			   .call(x_axis[valid_keys.length - j - 1])
@@ -152,9 +156,7 @@ function plot(key = non_numeric_keys[0]){
 
 				coord.push(temp_coord);
 			});
-
 		});
-
 	});
 
 	let aux = 0;
@@ -162,12 +164,12 @@ function plot(key = non_numeric_keys[0]){
 	coord.forEach((element)=>{
 
 		const auxiliary_index = Math.floor(aux / dataset.length);
-		const x_scale_index = (auxiliary_index % valid_keys.length);
+		const x_scale_index = auxiliary_index % valid_keys.length;
 		const y_scale_index = Math.floor(auxiliary_index / valid_keys.length);
-		let x_scale = x_scales[x_scale_index];
-		let y_scale = y_scales[y_scale_index];
+		const x_scale = x_scales[x_scale_index];
+		const y_scale = y_scales[y_scale_index];
 
-		let x = padding 
+		const x = padding 
 				+ x_scale(element[0])
 				+ (valid_keys.length - 1) * space_between_charts
 				+ (valid_keys.length - 1) * x_space_for_single_chart
@@ -175,27 +177,32 @@ function plot(key = non_numeric_keys[0]){
 		 		- x_scale_index * x_space_for_single_chart;
 
 
-		let y = padding
+		const y = padding
 				+ y_scale(element[1])
 				+ y_scale_index * vertical_space
 		 		+ y_scale_index * y_space_for_single_chart;
 
-		const dataset_index = aux - auxiliary_index * dataset.length;
-		const single_element = dataset[dataset_index];
-		const single_key_value = `${single_element[key]}`
+		let color;
 
-		let key_postion = non_numeric_keys.indexOf(key);
-		let values = non_numeric_values[key_postion];
+		if(non_numeric_keys.indexOf(key) != -1){
+			const dataset_index = aux - auxiliary_index * dataset.length;
+			const single_element = dataset[dataset_index];
+			const single_key_value = `${single_element[key]}`
+
+			let key_position = non_numeric_keys.indexOf(key);
+			let values = non_numeric_values[key_position];
+			color = colors[values.indexOf(single_key_value)];
+		}else{
+
+			color = "black";
+		}
 		
-		const color = colors[values.indexOf(single_key_value)];
-
 		svg.append("circle")
 		   .attr("cx", x)
 		   .attr("cy", y)
 		   .attr("r", radius)
 		   .attr("class", "dot")
 		   .attr("fill", only_black ? "black" : color);
-
 
 		aux++;
 	})
@@ -261,15 +268,17 @@ function draw_scatter_plot(dataset){
 
 	keys.forEach((element)=>{
 
-		if(!isNaN(parseFloat(`${aux_data[element]}`))){
+		if(!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions && isNaN(Date.parse(`${aux_data[element]}`))){
 
 			valid_keys.push(element);
 		}
 	});
 
+	console.log(valid_keys);
+
 	for(key in aux_data){
 
-		if(valid_keys.indexOf(key) == -1){
+		if(valid_keys.indexOf(key) == -1 && isNaN(parseFloat(`${aux_data[element]}`))){
 
 			non_numeric_keys.push(key);
 		}
@@ -308,8 +317,6 @@ function draw_scatter_plot(dataset){
 	create_scales();
 	create_axis("x");
 	create_axis("y");
-
-	
 
 	plot();
 

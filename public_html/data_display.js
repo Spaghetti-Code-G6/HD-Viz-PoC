@@ -6,8 +6,6 @@ const padding = 30;
 const space_between_charts = 15;
 const vertical_space = 10;
 
-//sepal length, sepal width, petal length, petal width
-
 function main(){
 
 	const svg = d3.select("#scatter_plot_content")
@@ -37,7 +35,7 @@ function send_data(){
 		 		dataset.push(data);
 		 	})
 		 	.then(()=>{
-		 	  	draw_scatter_plot(dataset)
+		 	  	draw_scatter_plot(dataset);
 		 	  })
 		  });
 }
