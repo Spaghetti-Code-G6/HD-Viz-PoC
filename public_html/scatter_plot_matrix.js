@@ -5,8 +5,8 @@ const max_dimensions = 5;
 let indexes = [];
 let x_axis = [];
 let y_axis = [];
-const x_number_of_ticks = 10;
-const y_number_of_ticks = 7;
+const x_number_of_ticks = 2;
+const y_number_of_ticks = 2;
 let valid_keys = [];
 let non_numeric_keys = [];
 let non_numeric_values = [];
@@ -60,13 +60,15 @@ function create_scales(){
 	let beginning_x;
 	let beggining_y = padding;
 	let aux_index = 0;
-
-	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
-	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
+	let counter = 0;
+	console.log(tags)
+	console.log(valid_keys)
+	const x_space_for_single_chart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
+	const y_space_for_single_chart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
 
 	tags.forEach((element, j)=> {
 
-		if(indexes.indexOf(j) == -1){
+		if(indexes.indexOf(j) == -1 && counter < max_dimensions){
 
 			let min = Number.POSITIVE_INFINITY;
 			let max = Number.NEGATIVE_INFINITY;
@@ -91,6 +93,7 @@ function create_scales(){
 			y_scales.push(current_y_scale);
 
 			aux_index++;
+			counter++;
 
 		}
 
@@ -112,8 +115,8 @@ function plot(key = non_numeric_keys[0]){
 		}
 	}
 
-	const x_space_for_single_chart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length - indexes.length);
-	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length - indexes.length);
+	const x_space_for_single_chart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
+	const y_space_for_single_chart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
 
 	const svg = d3.select("svg");
 	const aux_data = dataset[0];
@@ -123,6 +126,8 @@ function plot(key = non_numeric_keys[0]){
 	convert_dataset_to_array();
 
 	let coord = [];
+
+	//console.log(valid_keys)
 
 	y_scales.forEach((element, i)=>{
 
@@ -250,8 +255,12 @@ function draw_scatter_plot(dataset){
 		return;
 	}
 
+	let start = performance.now()
 	clear_all();
 	
+	console.clear();
+	console.log("Iniziato")
+
 	const element = document.getElementById("dimensionSelection");
 	const aux_data = dataset[0];
 	const keys = Object.keys(aux_data);
@@ -274,7 +283,7 @@ function draw_scatter_plot(dataset){
 		}
 	});
 
-	console.log(valid_keys);
+	//console.log(valid_keys);
 
 	for(key in aux_data){
 
@@ -284,6 +293,7 @@ function draw_scatter_plot(dataset){
 		}
 	}
 
+	let j = 0;
 	for(key in aux_data){
 
 		let aux = [];
@@ -295,6 +305,8 @@ function draw_scatter_plot(dataset){
 			}			
 		})
 
+		console.log(j);
+		j++;
 		if(aux.length != 0){
 
 			non_numeric_values.push(aux);
@@ -314,14 +326,16 @@ function draw_scatter_plot(dataset){
 
 	element.innerHTML += "</select>"
 
+	console.log("aggiunto html")
+
 	create_scales();
+	console.log("create scale")
 	create_axis("x");
 	create_axis("y");
-
+	console.log("creati assi")
 	plot();
-
-	//console.log(valid_keys);
-
+	console.log("plottato")
 	
-
+	let end = performance.now();
+	console.log(`Execution time: ${end - start} ms`);
 }
