@@ -1,16 +1,18 @@
 
 import express from 'express';
 /* Routing per file di CSV*/
-import CSVRouter from "./CSVRoute.js";
-import {garbageCollector} from './CSVRoute.js'
+import CSVRouter from "./src/js/CSVRoute.js";
+import {garbageCollector} from './src/js/CSVRoute.js'
 
 const port = 8085;
 
 let app = express()
 app.use('/csv', CSVRouter)
 
+app.use('/', express.static( 'client'))
+
 import fs from 'fs'
-import Router from "express";
+
 
 app.use(express.static('public'));
 
@@ -26,6 +28,7 @@ app.use(express.static('public'));
  *      connection_name.config
  * */
 
+/** @deprecated*/
 app.get('/db/list', ((req, res) => {
 
     let conf = []
@@ -40,7 +43,7 @@ app.get('/db/list', ((req, res) => {
     res.send(conf)
 
 }))
-
+/** @deprecated*/
 app.post('/dbAccess', (req, res) => {
     /** Accesso al db dato.*/
     console.log(req.body.password)
@@ -53,12 +56,11 @@ app.post('/dbAccess', (req, res) => {
         console.log("Errore di connessione")
     }
 })
-
+/** @deprecated*/
 app.get('/graph',((req, res, next) => {
 
 }))
 
 app.listen(port)
 
-console.log(garbageCollector)
 
