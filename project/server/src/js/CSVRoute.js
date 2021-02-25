@@ -21,9 +21,8 @@ CSVRouter.use(uploader({
         debug : false
 }));
 
-CSVRouter.get('/', (req, res) => {
-    res.send('Hello There')
-})
+/** @deprecated. Solo di test di connessione.*/
+CSVRouter.get('/', (req, res) => {res.send('Hello There')})
 
 
 CSVRouter.post('/upload', async (req,res) =>{
@@ -33,12 +32,10 @@ CSVRouter.post('/upload', async (req,res) =>{
 
         /** Controllo formato.*/
         const fileName = req.files.csvFile.name;
-        console.log(fileName.slice(fileName.length - 4))
-
+        /** Check the format of the given file.*/
         if(fileName.substr(fileName.length - 4) === '.csv'){
 
             console.log('File valid.');
-
             /** Creazione metadati*/
             let metadata = []
 
@@ -50,23 +47,16 @@ CSVRouter.post('/upload', async (req,res) =>{
             let types = firstLines[1].split(',')
 
             for(let i = 0; i < header.length; i++){
-                metadata[i] = {
-                    [header[i].replaceAll("\"", "")]
-                    : !isNaN(+types[i])  ? typeof  +types[i] : typeof types[i], visibility: true
-                };
+                metadata[i] = { /** Struttura dei metadati. header (nome campo), tipo (numeric/string), visibilità.*/
+                    header : header[i].replaceAll("\"", ""),
+                    type: !isNaN(+types[i])  ? typeof  +types[i] : typeof types[i], visible: true };
             }
-
-            console.log(metadata)
-
-            /** @return Object{ url : path, meta : Object of Metadata }*/
+         /** @return Object{ url : path, meta : Object of Metadata }*/
             res.send({ url: req.files.csvFile.tempFilePath, meta: metadata });
-
         }
-    } else
+    } else  res.send('Errore')
         /* Gestione errore va qui.
         ( Oggetto vuoto che mandato il front-end riconosce essere vuoto ?)*/
-        res.send('Errore')
-
 })
 
 /** @param {number} limit: Righe che si vogliono estrarre a partire da 0.
@@ -77,9 +67,8 @@ function read(limit, path){
     const readStream = readLine.createInterface({ input: fs.createReadStream(path)})
 
     return new Promise(((resolve, reject) => {
-
-        let readLines = [];
-        let counter = 0;
+        /** Variabili di appoggio. */
+        let readLines = []; let counter = 0;
 
         readStream.on("line", chunk => {
             counter ++; readLines.push(chunk); console.log(counter);
@@ -87,8 +76,8 @@ function read(limit, path){
             if(counter === limit) readStream.close();
 
         });
-        readStream.on("close", () => resolve(readLines));
-        readStream.on("error", error => reject(error));
+        readStream.on("close", () => resolve(readLines)); /** Restituisce il valore di promessa*/
+        readStream.on("error", error => reject(error)); /** Manda errore, da gestire.*/
 
     }));
 }

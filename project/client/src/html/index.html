@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <script type="text/javascript" src="../js/Main.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
 </head>
 
 <body>
 
     <form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
         <input type="file" name="csvFile" id = "csvFile"/>
-        <input type='button' value='Upload!' onclick = "send_data()"/>
+        <input id="f" type='button' value='Upload!'/>
     </form>
+
+
+    <script type="module">
+        import { sendData } from '../js/Main.js'
+        document.querySelector('#f').addEventListener('click',sendData)
+    </script>
 
 </body>
 </html>

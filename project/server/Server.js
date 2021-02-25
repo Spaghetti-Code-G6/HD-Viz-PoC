@@ -4,12 +4,15 @@ import express from 'express';
 import CSVRouter from "./src/js/CSVRoute.js";
 import {garbageCollector} from './src/js/CSVRoute.js'
 
+import {config} from './src/js/ConfigurationReader.js'
+
 const port = 8085;
 
 let app = express()
 app.use('/csv', CSVRouter)
 
 app.use('/', express.static( 'client'))
+app.use('/server/csv/tmp', express.static('server/csv/tmp'))
 
 import fs from 'fs'
 
@@ -58,7 +61,8 @@ app.post('/dbAccess', (req, res) => {
 })
 /** @deprecated*/
 app.get('/graph',((req, res, next) => {
-
+    console.log(config)
+    res.send(config)
 }))
 
 app.listen(port)
