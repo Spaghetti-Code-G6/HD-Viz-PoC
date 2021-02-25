@@ -16,7 +16,7 @@ CSVRouter.use(uploader({
 
         /** Uso di file temporanei. s*/
         useTempFiles : true,
-        tempFileDir: 'csv/tmp/',
+        tempFileDir: 'server/csv/tmp/',
         /* Non so cosa faccia questo.*/
         debug : false
 }));
@@ -83,7 +83,7 @@ function read(limit, path){
 
         readStream.on("line", chunk => {
             counter ++; readLines.push(chunk); console.log(counter);
-            // Non so perché ma mi controlla tutte le righe
+            // Non so perché ma mi controlla tutte le righe. Probabilmente entra in esecuzione prima della chiusura.
             if(counter === limit) readStream.close();
 
         });
@@ -93,15 +93,9 @@ function read(limit, path){
     }));
 }
 
-/** Operazione di caricamento del percorso.*/
-CSVRouter.get('/csvLoad', (req, res) => {
-
-})
-
 export const garbageCollector = setInterval( ()=> {
-    console.log('Something happened');
-    fs.rmdir('csv/tmp/', {recursive : true}, ()=>{
-        fs.mkdir('csv/tmp', ()=> console.log('Deleted temp files.'))})}, 1000 * 3600)
+    fs.rmdir('server/csv/tmp/', {recursive : true}, ()=>{
+        fs.mkdir('server/csv/tmp', ()=> console.log('Deleted temp files.'))})}, 1000 * 3600)
 
 export default CSVRouter;
 
