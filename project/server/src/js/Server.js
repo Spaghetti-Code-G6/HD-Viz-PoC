@@ -1,72 +1,18 @@
-/**
- *  csvConverted : {
- *      headers : [{
- *          nomeCampo : tipo
- *          visibility : true/false
- *
- *      }, {
- *          nomeCampo : tipo
- *          visibility : true/false
- *      }]
- *      data : [
- *          { Campo : valore ... }
- *          { Campo : valore ... }
- *          { Campo : valore ... }
- *      ];
- *  }
- * **/
 
-import express from 'express'
+import express from 'express';
+/* Routing per file di CSV*/
+import CSVRouter from "./CSVRoute.js";
+import {garbageCollector} from './CSVRoute.js'
 
-const CSVtoJSON =require("csvtojson");
+const port = 8085;
 
-const path = require('path');
-
-const upload = require("express-fileupload");
-const fs = require("fs");
-
-let port = 8085;
 let app = express()
+app.use('/csv', CSVRouter)
+
+import fs from 'fs'
+import Router from "express";
 
 app.use(express.static('public'));
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.use(upload())
-
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.get('/game', (req, res)=>{
-    res.send('Hello there')
-})
-
-app.get('/game/fileload', ((req, res) => {
-    res.sendFile('CSVForm.html', { root : __dirname})
-}))
-
-app.post('/newFile', (async (req, res) => {
-
-    const csvFile = req.files.csvFile.data.toString('utf8');
-
-    let metadata = [];
-
-    let types = csvFile.split('\n')[1].split(',');
-    let header = csvFile.split('\n')[0].split(',');
-
-    for(let i = 0; i < header.length ; i++){
-        // JSON contenente array di oggetti.
-        metadata[i] = {/** Creazione di header di metadata.*/
-            [header[i].replaceAll("\"", "")]:
-                !isNaN(+types[i]) ? typeof +types[i] : typeof types[i],
-            visibility: true
-        };
-    }
-    /** Remove return and merge two jsons.*/
-    const csvData = await CSVtoJSON().fromString(csvFile).then(json => {return { data: json }})
-    res.json({metadata, ...csvData})
-
-}))
 
 /**
  *  sqlConfigurations/
@@ -113,3 +59,6 @@ app.get('/graph',((req, res, next) => {
 }))
 
 app.listen(port)
+
+console.log(garbageCollector)
+
