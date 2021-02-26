@@ -20,6 +20,7 @@
     "d3-axis": "^2.0.0",
     "d3-fetch": "^2.0.0",
     "d3-require": "^1.2.4",
-    "d3-scale": "^3.2.3"
+    "d3-scale": "^3.2.3",
+    "express-session": "^1.17.1"
   }
 }

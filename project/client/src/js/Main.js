@@ -2,8 +2,8 @@
     import {drawScatterPlotMatrix} from '/src/js/ScatterPlot.js';
 
     /** Global ? */
-    let dataset = [];
-    let metadata = [];
+    export let dataset = [];
+    export let metadata = [];
 
     const width = 1300; const height = 850;
     /** Proprietà di display */

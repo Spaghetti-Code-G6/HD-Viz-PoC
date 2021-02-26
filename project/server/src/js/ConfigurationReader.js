@@ -21,7 +21,7 @@ function createLists(path){
 
 function makeConfigs() {
 
-    let config = []; const path = './server/src/dbConfig';
+    let config = []; const path = './server/src/dbConfig/';
     createLists(path).forEach( (value => {
 
         let configData = JSON.parse(fs.readFileSync(path + value, 'utf-8'));
@@ -40,7 +40,7 @@ let config = makeConfigs();
 /** Funzione per ottenere i dati sicuri da mandare al front end. Nome e descrizione del db e indice della lista di
  *  configurazioni in modo da poter poi accedere rapidamente alla scelta dell utente.
  *  @return {Array<Object>} : Lista dei dati sicuri e indice degli elementi. */
-config.secureSend = function (){
+config.secureSend = () => {
     let returnObject = [];
     config.forEach( (val, index) => returnObject.push({name : val.name, description : val.description, index : index}));
     return returnObject;

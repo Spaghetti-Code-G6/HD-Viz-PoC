@@ -13,12 +13,9 @@ let CSVRouter = Router()
 CSVRouter.use(uploader({
         /** Limite in dimensione del file caricato.*/
         limits : { fileSize: 500 * 1048576 },
-
         /** Uso di file temporanei. s*/
         useTempFiles : true,
         tempFileDir: 'server/csv/tmp/',
-        /* Non so cosa faccia questo.*/
-        debug : false
 }));
 
 /** @deprecated. Solo di test di connessione.*/
@@ -29,7 +26,6 @@ CSVRouter.post('/upload', async (req,res) =>{
 
     /* Caricato con successo il file.*/
     if(req.files){
-
         /** Controllo formato.*/
         const fileName = req.files.csvFile.name;
         /** Check the format of the given file.*/
@@ -51,7 +47,9 @@ CSVRouter.post('/upload', async (req,res) =>{
                     header : header[i].replaceAll("\"", ""),
                     type: !isNaN(+types[i])  ? typeof  +types[i] : typeof types[i], visible: true };
             }
-         /** @return Object{ url : path, meta : Object of Metadata }*/
+            /** Metadata di sessione.*/
+            if(!req.session.metadata) req.session.metadata = metadata;
+            /** @return Object{ url : {String}, meta : {Object} }*/
             res.send({ url: req.files.csvFile.tempFilePath, meta: metadata });
         }
     } else  res.send('Errore')
@@ -71,7 +69,7 @@ function read(limit, path){
         let readLines = []; let counter = 0;
 
         readStream.on("line", chunk => {
-            counter ++; readLines.push(chunk); console.log(counter);
+            counter ++; readLines.push(chunk);
             // Non so perché ma mi controlla tutte le righe. Probabilmente entra in esecuzione prima della chiusura.
             if(counter === limit) readStream.close();
 
