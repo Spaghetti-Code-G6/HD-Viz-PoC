@@ -1,52 +1,49 @@
 
 import fs from 'fs'
 
-function createLists(){
+/** Folder Structure: ( Ogni configurazione è dotato di due file)
+ *  dbConfig/ connection_name.sql
+ *  dbConfig/ connection_name.config  **/
 
-    const configList = []; const sqlList = [];
-    fs.readdirSync('./server/src/dbConfig').forEach((file)=> {
-        /* Query to target database.*/
-        if (file.includes('.sql')) sqlList.push(file)
-        /* JSON config file. (query name, database description) */
-        else if (file.includes('.json')) configList.push(file)
-        /* Remove the file as its not in the right folder.*/
-        else fs.unlinkSync('./server/src/dbConfig/' + file)})
-    return {cfg: configList, sql : sqlList}
+
+/** Crea la lista di file .json di configurazione che sono presenti nella directory di configurazione dei database.
+ *  @param {String} path : String : Percorso delle configurazioni del server.
+ *  @return {Array<string>} : Lista dei file del folder.**/
+function createLists(path){
+    const configList = [];
+    fs.readdirSync(path).forEach((file)=> {
+        /* JSON config file list. (query name, database description) */
+        if (file.includes('.json')) configList.push(file)
+        /* Rimuoviamo tutti i file che non siano sql.*/
+        else if (!file.includes('.sql')) fs.unlinkSync(path + file)})
+    return configList;
 }
 
-function updateLists(){
-
-}
-
-/** TODO: Ripensare, si può fare meglio (ad esempio solo leggere file json e avere in quello linkato il file sql.
- *   in più leggere il file json.*/
 function makeConfigs() {
 
-    let data = createLists()
-    const configList = data.cfg; const sqlList = data.sql;
+    let config = []; const path = './server/src/dbConfig';
+    createLists(path).forEach( (value => {
 
-    if(configList.length !== sqlList.length){/** Trovare quelli soli e scartarli.*/ return ['abba']}
+        let configData = JSON.parse(fs.readFileSync(path + value, 'utf-8'));
+        let sqlData = fs.readFileSync(path + value.substr(0, value.length - 5) + '.sql', 'utf-8');
 
-    let config = []
-
-    configList.forEach( (configValue) =>{
-
-        let configStr = configValue.substr(0,configValue.length - 5);
-        sqlList.forEach((sqlValue, index, obj)=> {
-
-            let sqlStr = sqlValue.substr(0, sqlValue.length - 4);
-            if(configStr === sqlStr) {
-                /** Aggiunta alla configurazione.*/
-                config.push({config: configStr, query: sqlStr});
-
-                /** Rimozione elemento da lista file sql.*/
-                obj.splice(index,1);
-            }
-        })
-    })
+        /** Ignoriamo l elemento. */
+        if(sqlData.length === 0) console.log('Empty')
+        else {configData.query = sqlData; config.push(configData)}
+    }))
 
     return config;
 }
-
+/** Oggetto di configurazione.*/
 let config = makeConfigs();
-export { config, updateLists}
+
+/** Funzione per ottenere i dati sicuri da mandare al front end. Nome e descrizione del db e indice della lista di
+ *  configurazioni in modo da poter poi accedere rapidamente alla scelta dell utente.
+ *  @return {Array<Object>} : Lista dei dati sicuri e indice degli elementi. */
+config.secureSend = function (){
+    let returnObject = [];
+    config.forEach( (val, index) => returnObject.push({name : val.name, description : val.description, index : index}));
+    return returnObject;
+}
+
+export default config

@@ -82,7 +82,7 @@ function read(limit, path){
     }));
 }
 
-export const garbageCollector = setInterval( ()=> {
+const garbageCollector = setInterval( ()=> {
     fs.rmdir('server/csv/tmp/', {recursive : true}, ()=>{
         fs.mkdir('server/csv/tmp', ()=> console.log('Deleted temp files.'))})}, 1000 * 3600)
 
