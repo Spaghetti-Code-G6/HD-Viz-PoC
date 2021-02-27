@@ -7,8 +7,10 @@ subscriptionList.indexFeeder = 0;
 /** Aggiunta di una subscription.
  *  @return {Number} : Intero indice del nuovo elemento creato.*/
 subscriptionList.add = (fileName)=> {
+
     subscriptionList.indexFeeder++;
     return subscriptionList.push({ id: subscriptionList.indexFeeder, fileName: fileName, time: Date.now() });
+
 }
 
 subscriptionList.update = (id) => {
