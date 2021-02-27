@@ -89,7 +89,6 @@ let deleteBuffer = ['tmp-1-1614350840209', 'tmp-2-1614349815876'];
 /** Gestione degli elementi temporanei con stream. Più semplice da comprendere. Ad intervalli crea uno stream dall array
  *  di elementi da eliminare e li elimina in modo asincrono. Terminata l soperazione di lettura può distruggere la fonte.*/
 const streamGarbageCollector =  setInterval(() => {
-
     /** @type {String} filePath: Percorso dei file temporanei.*/
     const filePath = 'server/csv/tmp/';
 
