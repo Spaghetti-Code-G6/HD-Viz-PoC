@@ -10,7 +10,7 @@ const y_number_of_ticks = 2;
 let valid_keys = [];
 let non_numeric_keys = [];
 let non_numeric_values = [];
-const radius = 4;
+const radius = 2;
 const colors = ["blue", "red", "green"];
 
 function create_axis(axis) {
@@ -36,6 +36,8 @@ function create_scales() {
 	let values = Object.values(datas);
 	let i = 0;
 
+	console.log("COSE DI MARTIN: " + values)
+
 	values.forEach((element) => {
 		if (isNaN(element)) {
 			indexes.push(i);
@@ -47,8 +49,6 @@ function create_scales() {
 	let beggining_y = padding;
 	let aux_index = 0;
 	let counter = 0;
-	// console.log(tags)
-	// console.log(valid_keys)
 	const x_space_for_single_chart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
 	const y_space_for_single_chart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
 
@@ -66,8 +66,6 @@ function create_scales() {
 				.domain([min, max])
 				.range([0, x_space_for_single_chart])
 
-			// console.log(current_x_scale)
-
 			current_y_scale = d3.scaleLinear()
 				.domain([max, min])
 				.range([0, y_space_for_single_chart])
@@ -81,15 +79,17 @@ function create_scales() {
 	});
 }
 
-function plot(key = non_numeric_keys[0]) {
-	let only_black = false;
-
+function useBlack(key) {
 	if (typeof non_numeric_keys.length !== "undefined") {
 		if (non_numeric_keys.indexOf(key) != -1 && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length) {
-			// alert("Too many values, not enough colors. Using black for all.")
-			only_black = true;
+			return true;
 		}
 	}
+	return false;
+}
+
+function plot(key = non_numeric_keys[0]) {
+	let only_black = useBlack(key);
 
 	const x_space_for_single_chart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
 	const y_space_for_single_chart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
@@ -98,7 +98,6 @@ function plot(key = non_numeric_keys[0]) {
 	const keys = Object.keys(aux_data);
 	convert_dataset_to_array();
 	let coord = [];
-	// console.log(valid_keys)
 
 	y_scales.forEach((element, i) => {
 		let beginning_y = padding + i * vertical_space + i * y_space_for_single_chart;
@@ -110,7 +109,6 @@ function plot(key = non_numeric_keys[0]) {
 				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
 				.call(y_axis[i])
 				.attr("class", "axis" + (j != 0 ? " no_tick" : ""));
-			// console.log(x_axis);
 
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
@@ -175,7 +173,7 @@ function plot(key = non_numeric_keys[0]) {
 	})
 }
 
-function checkDimensionNumber() { 
+function checkDimensionNumber(obj, checked) { 
 	let number_of_checked = 0;
 	let checked_values = [];
 
@@ -210,8 +208,6 @@ function draw_scatter_plot(dataset) {
 
 	let start = performance.now()
 	clear_all();
-
-	console.clear();
 	console.log("Started")
 
 	const element = document.getElementById("dimensionSelection");
@@ -234,8 +230,6 @@ function draw_scatter_plot(dataset) {
 		}
 	});
 
-	// console.log(valid_keys);
-
 	for (key in aux_data) {
 		if (valid_keys.indexOf(key) == -1 && isNaN(parseFloat(`${aux_data[element]}`))) {
 			non_numeric_keys.push(key);
@@ -250,7 +244,6 @@ function draw_scatter_plot(dataset) {
 				aux.push(`${element[key]}`);
 			}
 		})
-		// console.log(j);
 		j++;
 		if (aux.length != 0) {
 			non_numeric_values.push(aux);
