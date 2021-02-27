@@ -1,10 +1,8 @@
 
 import fs from 'fs'
-
 /** Folder Structure: ( Ogni configurazione è dotato di due file)
  *  dbConfig/ connection_name.sql
  *  dbConfig/ connection_name.config  **/
-
 
 /** Crea la lista di file .json di configurazione che sono presenti nella directory di configurazione dei database.
  *  @param {String} path : String : Percorso delle configurazioni del server.
