@@ -1,13 +1,17 @@
 
-import Router from 'express';
-import uploader from 'express-fileupload';
+import Router from 'express'
+import uploader from 'express-fileupload'
 
-import fs from 'fs';
+import fs from 'fs'
 import readLine from 'readline'
 
 import stream from 'stream'
 
-/** Handle di route per la gestione dei CSV*/
+/** Crea lista di iscrizione all elenco di sessioni da CSV, importante per mantenere in memoria i file
+ *  temporanei delle sessioni ancora in corso.*/
+import subscriptionList from './subscriptionList.js'
+
+
 let CSVRouter = Router()
 
 /** Utilizzo di uploader con configurazione di limiti.*/
@@ -19,12 +23,8 @@ CSVRouter.use(uploader({
         tempFileDir: 'server/csv/tmp/',
 }));
 
-/** @deprecated. Solo di test di connessione.*/
-CSVRouter.get('/', (req, res) => {res.send('Hello There')})
-
-
 CSVRouter.post('/upload', async (req,res) =>{
-
+    /** TODO: Sistemare per sessione.*/
     /* Caricato con successo il file.*/
     if(req.files){
         /** Controllo formato.*/
@@ -48,8 +48,16 @@ CSVRouter.post('/upload', async (req,res) =>{
                     header : header[i].replaceAll("\"", ""),
                     type: !isNaN(+types[i])  ? typeof  +types[i] : typeof types[i], visible: true };
             }
+
+            /* TODO: Fare come si deve, ora testavo e basta.*/
             /** Metadata di sessione.*/
-            if(!req.session.metadata) req.session.metadata = metadata;
+            req.session.hdVizId = subscriptionList.add(fileName);
+            if(req.session.hdVizId > - 1) {
+                req.session.metadata = metadata;
+                req.session.source = fileName;
+                req.session.sourceType = 'csv';
+            } else { req.session.destroy(); }
+
             /** @return Object{ url : {String}, meta : {Object} }*/
             res.send({ url: req.files.csvFile.tempFilePath, meta: metadata });
         }
@@ -81,21 +89,20 @@ function read(limit, path){
     }));
 }
 
-/** Elementi temporanei da eliminare. A chiusura di sessione o timeout (a certo numero di sessioni entranti) si decide
- *  di eliminare le sessioni agli utenti che non la usano. Stile contratto che viene rinnovato su uso costante.
- *  FIFO con rinnovo in momenti di esecuzione.*/
-let deleteBuffer = ['tmp-1-1614350840209', 'tmp-2-1614349815876'];
-
 /** Gestione degli elementi temporanei con stream. Più semplice da comprendere. Ad intervalli crea uno stream dall array
  *  di elementi da eliminare e li elimina in modo asincrono. Terminata l soperazione di lettura può distruggere la fonte.*/
 const streamGarbageCollector =  setInterval(() => {
+
     /** @type {String} filePath: Percorso dei file temporanei.*/
     const filePath = 'server/csv/tmp/';
+    /** Limite di sessioni da CSV apribili allo stesso tempo.*/
+    const limit = 10;
 
-    new stream.Readable.from(deleteBuffer)
-        .on('data',(chunk)=> fs.unlink(filePath + chunk, err =>{if(err) console.log(err)}))
-        .on('end', () => deleteBuffer = [])
-        .on('error',(err)=> console.log('err : '+ err));
+    if(subscriptionList.length > limit)
+        new stream.Readable.from(subscriptionList.purge(limit/2))
+            .on('data',(chunk)=> fs.unlink(filePath + chunk, err =>{if(err) console.log(err)}))
+            .on('end', () => console.log('Finita eliminazione'))
+            .on('error',(err)=> console.log('err : '+ err));
 }, 30*100) /* Intervallo di ripetizione.*/
 
 export default CSVRouter;
