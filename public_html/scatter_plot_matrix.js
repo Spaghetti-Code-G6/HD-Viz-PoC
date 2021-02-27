@@ -13,8 +13,10 @@ let non_numeric_values = [];
 const radius = 2;
 const colors = ["blue", "red", "green"];
 
+/*
+* Descrivere
+*/
 function create_axis(axis) {
-	// ONLY THE CREATION
 	if (axis == "x") {
 		x_scales.forEach((element) => {
 			x_axis.push(d3.axisBottom(element).ticks(x_number_of_ticks))
@@ -28,6 +30,9 @@ function create_axis(axis) {
 	}
 }
 
+/*
+* Descrivere
+*/
 function create_scales() {
 	let current_x_scale;
 	let current_y_scale;
@@ -35,8 +40,6 @@ function create_scales() {
 	let datas = dataset[0];
 	let values = Object.values(datas);
 	let i = 0;
-
-	console.log("COSE DI MARTIN: " + values)
 
 	values.forEach((element) => {
 		if (isNaN(element)) {
@@ -79,6 +82,9 @@ function create_scales() {
 	});
 }
 
+/*
+* Controlla se i colori a disposizione bastano per rappresentare i valori
+*/
 function useBlack(key) {
 	if (typeof non_numeric_keys.length !== "undefined") {
 		if (non_numeric_keys.indexOf(key) != -1 && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length) {
@@ -88,6 +94,9 @@ function useBlack(key) {
 	return false;
 }
 
+/*
+* Descrivere
+*/
 function plot(key = non_numeric_keys[0]) {
 	let only_black = useBlack(key);
 
@@ -120,7 +129,6 @@ function plot(key = non_numeric_keys[0]) {
 
 			array_dataset.forEach((element) => {
 				let temp_coord = [];
-
 				temp_coord.push(element[j]);	// x
 				temp_coord.push(element[i]);	// y
 				coord.push(temp_coord);
@@ -173,6 +181,9 @@ function plot(key = non_numeric_keys[0]) {
 	})
 }
 
+/*
+* Controlla che il numero di dimensioni selezionate non superi il limite
+*/
 function checkDimensionNumber(obj, checked) { 
 	let number_of_checked = 0;
 	let checked_values = [];
@@ -192,86 +203,105 @@ function checkDimensionNumber(obj, checked) {
 	}
 }
 
+/*
+* Descrivere
+*/
 function adapt_scatter_plot(obj, checked) {
 	checkDimensionNumber(obj, checked);
 	
 }
 
-function still_not_existing_function() { }
+/*
+* Descrivere
+*/
+function still_not_existing_function(value, selectedIndex) {
+	console.log('value: ' + value);
+	console.log('selectedIndex: ' + selectedIndex);
+}
 
-function draw_scatter_plot(dataset) {
-
+/*
+* Controlla se il dataset è vuoto
+*/
+function isDatasetEmpty(dataset) {
 	if (dataset.length == 0) {
 		alert("Dataset empty");
-		return;
+		return true;
 	}
+	return false;
+}
 
-	let start = performance.now()
-	clear_all();
-	console.log("Started")
+/*
+* Descrivere
+*/
+function draw_scatter_plot(dataset) {
+	if (!isDatasetEmpty(dataset)) {
+		let start = performance.now()
+		clear_all();
+		console.log("Started")
 
-	const element = document.getElementById("dimensionSelection");
-	const aux_data = dataset[0];
-	const keys = Object.keys(aux_data);
+		const element = document.getElementById("dimensionSelection");
+		const aux_data = dataset[0];
+		const keys = Object.keys(aux_data); // Nome di ogni dimensione
 
-	for (key in aux_data) {
-		tags.push(key);
+		for (key in aux_data) {
+			tags.push(key); // ??
 
-		element.innerHTML += `<li><label for = '${key}'> ` + make_readable({ key }) + `</label>`;
-		element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
-			+ ((tags.length <= max_dimensions) ? "checked" : "")
-			+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
-		element.innerHTML += `</li>`;
-	}
-
-	keys.forEach((element) => {
-		if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions && isNaN(Date.parse(`${aux_data[element]}`))) {
-			valid_keys.push(element);
+			element.innerHTML += `<div><label for = '${key}'> ` + make_readable({ key }) + `</label>`;
+			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
+				+ ((tags.length <= max_dimensions) ? "checked" : "")
+				+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
+			element.innerHTML += `</div>`;
 		}
-	});
 
-	for (key in aux_data) {
-		if (valid_keys.indexOf(key) == -1 && isNaN(parseFloat(`${aux_data[element]}`))) {
-			non_numeric_keys.push(key);
-		}
-	}
-
-	let j = 0;
-	for (key in aux_data) {
-		let aux = [];
-		dataset.forEach((element) => {
-			if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(`${element[key]}`) == -1)) {
-				aux.push(`${element[key]}`);
+		keys.forEach((element) => {
+			if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions && isNaN(Date.parse(`${aux_data[element]}`))) {
+				valid_keys.push(element); // dimensioni numeriche
 			}
-		})
-		j++;
-		if (aux.length != 0) {
-			non_numeric_values.push(aux);
+		});
+
+		for (key in aux_data) {
+			if (valid_keys.indexOf(key) == -1 && isNaN(parseFloat(`${aux_data[element]}`))) {
+				non_numeric_keys.push(key); // dimensioni NON numeriche
+			}
 		}
+
+		let j = 0;
+		for (key in aux_data) {
+			let aux = [];
+			dataset.forEach((element) => {
+				if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(`${element[key]}`) == -1)) {
+					aux.push(`${element[key]}`); // ??
+				}
+			})
+			j++;
+			if (aux.length != 0) {
+				non_numeric_values.push(aux);
+			}
+		}
+
+		element.innerHTML += "<br/>"
+		element.innerHTML += "<label for='color_selection'>Colora una dimensione: </label>"
+
+		element.innerHTML += "<select id = 'color_selection' onchange = 'still_not_existing_function(value, selectedIndex)'>";
+		const select = document.getElementById("color_selection");
+
+		non_numeric_keys.forEach((element) => {
+			select.innerHTML += `<option value = '${element}'> ${element}</option>`
+		});
+
+		element.innerHTML += "</select>"
+
+		console.log("Added HTML ")
+
+		create_scales(); // ??
+		console.log("Created scale")
+		create_axis("x"); // ??
+		create_axis("y"); // ??
+		console.log("Created axis")
+		plot();
+		console.log("Plotted")
+
+		let end = performance.now();
+		console.log(`Execution time: ${end - start}ms`);
 	}
-
-	element.innerHTML += "<br/>"
-	element.innerHTML += "<span>Seleziona una dimensione da visualizzare tramite il colore: </span>"
-
-	element.innerHTML += "<select id = 'color_selection' onchange = 'still_not_existing_function()'>";
-	const select = document.getElementById("color_selection");
-
-	non_numeric_keys.forEach((element) => {
-		select.innerHTML += `<option value = '${element}'> ${element}</option>`
-	});
-
-	element.innerHTML += "</select>"
-
-	console.log("Added HTML ")
-
-	create_scales();
-	console.log("Created scale")
-	create_axis("x");
-	create_axis("y");
-	console.log("Created axis")
-	plot();
-	console.log("Plotted")
-
-	let end = performance.now();
-	console.log(`Execution time: ${end - start} ms`);
 }
