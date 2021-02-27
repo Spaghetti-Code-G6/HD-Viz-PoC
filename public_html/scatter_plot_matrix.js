@@ -175,8 +175,8 @@ function plot(key = non_numeric_keys[0]) {
 			.attr("cy", y)
 			.attr("r", radius)
 			.attr("class", "dot")
-			.attr("fill", only_black ? "black" : color);
-
+			.attr("fill", only_black ? "black" : color)
+			.style("opacity", .5);
 		aux++;
 	})
 }
