@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>PoC - HD-Viz</title>
 
 	<meta charset="utf-8">
 
-	<link rel="stylesheet" type="text/css" href="style.css"></head>
-	<script type="text/javascript" src = "aux_for_samuel.js"></script>
-	<script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
-	<script type="text/javascript" src = "data_display.js"></script>
-	<script type="text/javascript" src = "scatter_plot_matrix.js"></script>
-	<script type="text/javascript" src = "aux_functions.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<script type="text/javascript" src="aux_for_samuel.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
+<script type="text/javascript" src="data_display.js"></script>
+<script type="text/javascript" src="scatter_plot_matrix.js"></script>
+<script type="text/javascript" src="aux_functions.js"></script>
 
 </head>
-<body onload = "main()">
 
-<!--
+<body onload="main()">
+
+	<!--
 <h1>Scatter plot matrix</h1>
 
 <div id = 'various_buttons'>
@@ -45,21 +48,19 @@
 
 	<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
 
-        <input type="file" name="csvFile" id = "csvFile"/>
-        <input type='button' value='Upload!' onclick = "send_data()"/>
+		<input type="file" name="csvFile" id="csvFile" />
+		<input type='button' value='Carica file' onclick="send_data()" />
 
-    </form>
-	
+	</form>
 
+	<!--</div>-->
 
+	<div id="tooltip"></div>
 
-<!--</div>-->
+	<div id='scatter_plot_content'></div>
 
-<div id = "tooltip"></div>
-
-<div id = 'scatter_plot_content'></div>
-
-<div id = "dimensionSelection"></div>
+	<div id="dimensionSelection"></div>
 
 </body>
+
 </html>

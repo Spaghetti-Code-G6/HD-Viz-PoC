@@ -1,56 +1,54 @@
-body{
-
-	color: #fff;
-	background-color: #212121;
+body {
+  margin-left: 5em;
+  margin-top: 2em;
+  color: #fff;
+  background-color: #888888;
 }
 
-#various_buttons{
-
-	display: inline-block;
-	margin-bottom: 3em;
+form {
+  margin-bottom: 1em;
 }
 
-.no_display{
 
-	display: none;
+
+#various_buttons {
+  display: inline-block;
+  margin-bottom: 3em;
 }
 
-#dimensionSelection input{
-
-	margin-right: .5em;
+.no_display {
+  display: none;
 }
 
-svg{
+#dimensionSelection input {
+  margin-right: 0.5em;
+}
 
-	background-color: #fff;
-	margin: auto;
+svg {
+  background-color: #fff;
+  margin: auto;
 }
 
 .axis {
-
-	stroke: black;
-	stroke-width: .7;
+  stroke: black;
+  stroke-width: 0.7;
 }
 
-.tick{
-
-	stroke: black;
-	fill: black;
+.tick {
+  stroke: black;
+  fill: black;
 }
 
-.tick text{
-
-	stroke: none;
-	color: black;
+.tick text {
+  stroke: none;
+  color: black;
 }
 
-.no_tick text{
-
-	display: none;
+.no_tick text {
+  display: none;
 }
 
-.axis path{
-
-	stroke: black;
-	fill: none;
+.axis path {
+  stroke: black;
+  fill: none;
 }
