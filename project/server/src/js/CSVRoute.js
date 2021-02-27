@@ -54,7 +54,7 @@ CSVRouter.post('/upload', async (req,res) =>{
             req.session.hdVizId = subscriptionList.add(fileName);
             if(req.session.hdVizId > - 1) {
                 req.session.metadata = metadata;
-                req.session.source = fileName;
+                req.session.sourceFile = fileName;
                 req.session.sourceType = 'csv';
             } else { req.session.destroy(); }
 
@@ -90,7 +90,7 @@ function read(limit, path){
 }
 
 /** Gestione degli elementi temporanei con stream. Più semplice da comprendere. Ad intervalli crea uno stream dall array
- *  di elementi da eliminare e li elimina in modo asincrono. Terminata l soperazione di lettura può distruggere la fonte.*/
+ *  di elementi da eliminare e li elimina in modo asincrono.*/
 const streamGarbageCollector =  setInterval(() => {
 
     /** @type {String} filePath: Percorso dei file temporanei.*/

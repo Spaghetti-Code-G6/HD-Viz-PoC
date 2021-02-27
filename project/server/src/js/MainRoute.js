@@ -3,6 +3,9 @@ import Router from 'express';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+
+import subscriptionList from "./subscriptionList.js";
+
 const __dirname = dirname(dirname(dirname(dirname(fileURLToPath(import.meta.url)))));
 
 let mainRouter = Router();
@@ -14,7 +17,20 @@ mainRouter.use('/home', (req, res) =>{
     /** Se la session è attiva allora mandiamo i meta dati.*/
     if(req.session.metadata) res.send(req.session.metadata)
     else res.sendFile(__dirname +  '/client/src/html/index.html')
-
 })
+
+/** Per motivi di sicurezza farei una bella POST.*/
+mainRouter.use('/session', ((req, res) => {
+
+    if(req.session.hdVizId > 0){
+        if(req.session.sourceType === 'csv') {
+
+            subscriptionList.update(req.session.hdVizId);
+            res.send({ url: req.session.sourceFile, meta: req.session.metadata })
+
+        } else { console.log('sql bip bup bup...') }
+    } else { res.send(  { invalid: true }); }
+
+}))
 
 export default mainRouter;
