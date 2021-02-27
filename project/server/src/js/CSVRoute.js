@@ -5,9 +5,10 @@ import uploader from 'express-fileupload';
 import fs from 'fs';
 import readLine from 'readline'
 
+import stream from 'stream'
+
 /** Handle di route per la gestione dei CSV*/
 let CSVRouter = Router()
-
 
 /** Utilizzo di uploader con configurazione di limiti.*/
 CSVRouter.use(uploader({
@@ -80,9 +81,23 @@ function read(limit, path){
     }));
 }
 
-const garbageCollector = setInterval( ()=> {
-    fs.rmdir('server/csv/tmp/', {recursive : true}, ()=>{
-        fs.mkdir('server/csv/tmp', ()=> console.log('Deleted temp files.'))})}, 1000 * 3600)
+/** Elementi temporanei da eliminare. A chiusura di sessione o timeout (a certo numero di sessioni entranti) si decide
+ *  di eliminare le sessioni agli utenti che non la usano. Stile contratto che viene rinnovato su uso costante.
+ *  FIFO con rinnovo in momenti di esecuzione.*/
+let deleteBuffer = ['tmp-1-1614350840209', 'tmp-2-1614349815876'];
+
+/** Gestione degli elementi temporanei con stream. Più semplice da comprendere. Ad intervalli crea uno stream dall array
+ *  di elementi da eliminare e li elimina in modo asincrono. Terminata l soperazione di lettura può distruggere la fonte.*/
+const streamGarbageCollector =  setInterval(() => {
+
+    /** @type {String} filePath: Percorso dei file temporanei.*/
+    const filePath = 'server/csv/tmp/';
+
+    new stream.Readable.from(deleteBuffer)
+        .on('data',(chunk)=> fs.unlink(filePath + chunk, err =>{if(err) console.log(err)}))
+        .on('end', () => deleteBuffer = [])
+        .on('error',(err)=> console.log('err : '+ err));
+}, 30*100) /* Intervallo di ripetizione.*/
 
 export default CSVRouter;
 
