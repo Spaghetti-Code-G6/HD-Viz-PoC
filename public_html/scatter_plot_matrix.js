@@ -175,31 +175,28 @@ function plot(key = non_numeric_keys[0]) {
 	})
 }
 
-function adapt_scatter_plot(obj, checked) {
-	/*let number_of_checked = 0;
+function checkDimensionNumber() { 
+	let number_of_checked = 0;
 	let checked_values = [];
-	console.log(obj);
-	console.log(checked);
 
 	if(checked){
 		let div_element = document.getElementById("dimensionSelection");
 		let childs = div_element.childNodes;
-		console.log(childs)
 		childs.forEach((element) => {
-			//console.log(element.checked);
 			if(element.nodeName == "INPUT" && element.checked){
-
 				number_of_checked++;
-				console.log(element.value);
 			}
 		});
 		if(number_of_checked > max_dimensions + 2){
-
 			obj.checked = false;
-			alert("Number of field selected exceeds maximum number of fields")
+			alert("Reached max dimensions")
 		}
-	}*/
-	// ONLY CHECKING NUMBER OF ELEMENTS SELECTED
+	}
+}
+
+function adapt_scatter_plot(obj, checked) {
+	checkDimensionNumber(obj, checked);
+	
 }
 
 function still_not_existing_function() { }
@@ -224,10 +221,11 @@ function draw_scatter_plot(dataset) {
 	for (key in aux_data) {
 		tags.push(key);
 
-		element.innerHTML += `<label for = '${key}'> ` + make_readable({ key }) + `</label>`;
+		element.innerHTML += `<li><label for = '${key}'> ` + make_readable({ key }) + `</label>`;
 		element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
 			+ ((tags.length <= max_dimensions) ? "checked" : "")
 			+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
+		element.innerHTML += `</li>`;
 	}
 
 	keys.forEach((element) => {
@@ -259,14 +257,13 @@ function draw_scatter_plot(dataset) {
 		}
 	}
 
-	// element.innerHTML += "<br />"
+	element.innerHTML += "<br/>"
 	element.innerHTML += "<span>Seleziona una dimensione da visualizzare tramite il colore: </span>"
 
 	element.innerHTML += "<select id = 'color_selection' onchange = 'still_not_existing_function()'>";
 	const select = document.getElementById("color_selection");
 
 	non_numeric_keys.forEach((element) => {
-
 		select.innerHTML += `<option value = '${element}'> ${element}</option>`
 	});
 

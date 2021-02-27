@@ -9,7 +9,18 @@ form {
   margin-bottom: 1em;
 }
 
+#scatter_plot_content {
+  display: inline;
+}
 
+#dimensionSelection {
+  display: inline;
+  float: right;
+}
+
+#dimensionSelection li {
+  list-style-type: none;
+}
 
 #various_buttons {
   display: inline-block;
@@ -18,10 +29,6 @@ form {
 
 .no_display {
   display: none;
-}
-
-#dimensionSelection input {
-  margin-right: 0.5em;
 }
 
 svg {
