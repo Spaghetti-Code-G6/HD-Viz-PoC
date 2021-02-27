@@ -1,4 +1,3 @@
-
 import Express from 'express';
 import session from 'express-session'
 
@@ -18,15 +17,14 @@ hdViz.use(session({secret: 'Spaghetti'}))
 hdViz.use('/', Express.static( 'client'))
 hdViz.use('/server/csv/tmp', Express.static('server/csv/tmp'))
 
-
 /** Routing personalizzati:*/
 hdViz.use('/csv', CSVRouter)
-hdViz.use(mainRouter); /* Percorso di base.*/
+hdViz.use(mainRouter) /* Percorso di base.*/
 
 
 /** @deprecated*/
 hdViz.get('/db/list', ((req, res) => res.send(config.secureSend())))
 
-hdViz.listen(port) /* Siamo in ascolto di richieste HTTP. */
-export default  hdViz
+hdViz.listen(port); /* Siamo in ascolto di richieste HTTP. */
+export default  hdViz;
 
