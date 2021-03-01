@@ -3,6 +3,7 @@ import session from 'express-session'
 
 import CSVRouter from "./src/js/CSVRoute.js";
 import mainRouter  from "./src/js/MainRoute.js"
+import editRouter from "./src/js/EditMeta.js";
 
 import config from './src/js/ConfigurationReader.js'
 
@@ -14,11 +15,12 @@ let hdViz = Express()
 hdViz.use(session({secret: 'Spaghetti'}))
 
 /** Routing di file statici accessibili:*/
-hdViz.use('/', Express.static( 'client'))
+hdViz.use('/public', Express.static( 'client'))
 hdViz.use('/server/csv/tmp', Express.static('server/csv/tmp'))
 
 /** Routing personalizzati:*/
 hdViz.use('/csv', CSVRouter)
+hdViz.use('/update', editRouter)
 hdViz.use(mainRouter) /* Percorso di base.*/
 
 

@@ -1,5 +1,5 @@
 
-import Router from 'express'
+import express from 'express'
 import uploader from 'express-fileupload'
 
 import fs from 'fs'
@@ -12,7 +12,7 @@ import stream from 'stream'
 import subscriptionList from './subscriptionList.js'
 
 
-let CSVRouter = Router()
+let CSVRouter = express.Router()
 
 /** Utilizzo di uploader con configurazione di limiti.*/
 CSVRouter.use(uploader({
@@ -29,6 +29,7 @@ CSVRouter.post('/upload', async (req,res) =>{
     if(req.files){
         /** Controllo formato.*/
         const fileName = req.files.csvFile.name;
+
         /** Check the format of the given file.*/
         if(fileName.substr(fileName.length - 4) === '.csv'){
 

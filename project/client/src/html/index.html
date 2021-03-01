@@ -5,20 +5,17 @@
     <title>Title</title>
 
     <script src="https://d3js.org/d3.v6.js"></script>
-</head>
-
-<body>
-
-    <form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
-        <input type="file" name="csvFile" id = "csvFile"/>
-        <input id="f" type='button' value='Upload!'/>
-    </form>
-
 
     <script type="module">
-        import { sendData } from '../src/js/Main.js'
-        document.querySelector('#f').addEventListener('click',sendData)
+        import {createWindow} from '/public/src/js/Main.js'
+        window.createOnLoad = () => createWindow();
     </script>
+
+</head>
+
+<body onload="createOnLoad()">
+
+
 
 </body>
 </html>
