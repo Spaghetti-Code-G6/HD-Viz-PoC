@@ -11,10 +11,13 @@
   "type": "module",
   "license": "ISC",
   "dependencies": {
+    "connect-redis": "^5.1.0",
     "d3": "^6.5.0",
     "d3-selection": "^2.0.0",
     "express": "^4.17.1",
-    "express-fileupload": "^1.2.1"
+    "express-fileupload": "^1.2.1",
+    "memorystore": "^1.6.5",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "d3-axis": "^2.0.0",

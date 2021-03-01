@@ -1,5 +1,16 @@
-import Express from 'express';
+import Express from 'express';ù
+/** https://github.com/expressjs/session#readme */
 import session from 'express-session'
+
+/** https://www.npmjs.com/package/memorystore
+ *  Il memory store è un modo di archiviazione delle sessioni su memoria molto performante.
+ *  Meglio usare questo vista la nostra applicazione invece di un database.*/
+import memoryStore from 'memorystore'
+
+/** Routes. Upcoming structure:
+ *  - Retrieve Data Route (SQL + CSV ? o li divido?)
+ *  - Session Manager
+ *  - Editor Middleware */
 
 import CSVRouter from "./src/js/CSVRoute.js";
 import mainRouter  from "./src/js/MainRoute.js"
@@ -7,11 +18,11 @@ import editRouter from "./src/js/EditMeta.js";
 
 import config from './src/js/ConfigurationReader.js'
 
-const port = 8085;
+const PORT = 8085;
 
 let hdViz = Express()
 
-/** Sessione utente.*/
+/** Sessione utente. TODO: Implement store.*/
 hdViz.use(session({secret: 'Spaghetti'}))
 
 /** Routing di file statici accessibili:*/
@@ -23,10 +34,9 @@ hdViz.use('/csv', CSVRouter)
 hdViz.use('/update', editRouter)
 hdViz.use(mainRouter) /* Percorso di base.*/
 
-
 /** @deprecated*/
 hdViz.get('/db/list', ((req, res) => res.send(config.secureSend())))
 
-hdViz.listen(port); /* Siamo in ascolto di richieste HTTP. */
+hdViz.listen(PORT); /* Siamo in ascolto di richieste HTTP. */
 export default  hdViz;
 

@@ -11,7 +11,6 @@ import stream from 'stream'
  *  temporanei delle sessioni ancora in corso.*/
 import subscriptionList from './subscriptionList.js'
 
-
 let CSVRouter = express.Router()
 
 /** Utilizzo di uploader con configurazione di limiti.*/
@@ -20,7 +19,7 @@ CSVRouter.use(uploader({
         limits : { fileSize: 500 * 1048576 },
         /** Uso di file temporanei. s*/
         useTempFiles : true,
-        tempFileDir: 'server/csv/tmp/',
+        tempFileDir: 'server/csv/tmp/'
 }));
 
 CSVRouter.post('/upload', async (req,res) =>{
@@ -79,12 +78,17 @@ function read(limit, path){
         let readLines = []; let counter = 0;
 
         readStream.on("line", chunk => {
-            counter ++; readLines.push(chunk);
+
+            counter ++;
+            readLines.push(chunk);
             // Non so perché ma mi controlla tutte le righe. Probabilmente entra in esecuzione prima della chiusura.
-            if(counter === limit) readStream.close();
+            if(counter === limit)
+                readStream.close();
 
         });
+
         readStream.on("close", () => resolve(readLines)); /** Restituisce il valore di promessa*/
+
         readStream.on("error", error => reject(error)); /** Manda errore, da gestire.*/
 
     }));

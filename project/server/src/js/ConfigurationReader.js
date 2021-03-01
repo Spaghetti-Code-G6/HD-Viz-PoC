@@ -1,5 +1,7 @@
+/** Lettura delle diverse configurazioni database che si possono effettuare e le relative query.*/
 
 import fs from 'fs'
+
 /** Folder Structure: ( Ogni configurazione è dotato di due file)
  *  dbConfig/ connection_name.sql
  *  dbConfig/ connection_name.config  **/
