@@ -3,23 +3,39 @@ body{
 	/*background-color: #212121;*/
     background-color: white;
 }
-
-#various_buttons{
-
-	display: inline-block;
-	margin-bottom: 3em;
+/*=====================*/
+#scatter_plot_content {
+  display: inline;
 }
 
+#dimensionSelection {
+  display: inline;
+    float: right;
+    color: black;
+    border: 1px solid black;
+    padding: 0.5em;
+    width: 20%;
+}
+
+#dimensionSelection li {
+  list-style-type: none;
+}
+
+#various_buttons {
+  display: inline-block;
+  margin-bottom: 3em;
+}
+/*================*/
 .no_display{
 
 	display: none;
 }
-
+/*
 #dimensionSelection input{
 
 	margin-right: .5em;
 }
-
+*/
 svg{
 
 	background-color: #fff;

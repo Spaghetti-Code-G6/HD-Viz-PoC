@@ -222,13 +222,14 @@ function draw_scatter_plot(dataset) {
 	const keys = Object.keys(aux_data);
 
 	for (key in aux_data) {
-		tags.push(key);
+			tags.push(key); // ??
 
-		element.innerHTML += `<label for = '${key}'> ` + make_readable({ key }) + `</label>`;
-		element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
-			+ ((tags.length <= max_dimensions) ? "checked" : "")
-			+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
-	}
+			element.innerHTML += `<div><label for = '${key}'> ` + make_readable({ key }) + `</label>`;
+			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
+				+ ((tags.length <= max_dimensions) ? "checked" : "")
+				+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
+			element.innerHTML += `</div>`;
+		}
 
 	keys.forEach((element) => {
 		if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions && isNaN(Date.parse(`${aux_data[element]}`))) {
