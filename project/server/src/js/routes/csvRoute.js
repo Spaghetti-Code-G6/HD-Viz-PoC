@@ -48,7 +48,7 @@ csvRouter.post('/upload', async (req, res) =>{
             }
         }
         /** Settaggio corretto della sessione corrente.*/
-        req.session = setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
+        setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
         res.send({url: req.files.tempFilePath, meta: metaData})
     } else {res.send({err:'Errore in formato file.'});}
 })

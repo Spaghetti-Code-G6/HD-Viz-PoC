@@ -20,16 +20,15 @@ function deleteTemp(key, value) {
     const allValues = JSON.parse(value);
     /** Posso rimuovere il file temporaneo.*/
     if(allValues.hdConfig === 'csv') {
-        fs.unlink(allValues.hdFilePath, err => console.log(err ? err : 'Bip..  bup.  deleted'));
+        fs.unlink(allValues.hdFilePath, err => console.log(err ? err : 'Bip..  bup.  deleted ' + allValues.hdFilePath));
     }
 }
 
 
 /* Gestione delle sessioni. */
-// TODO: Riguardare dispose. Potrei aver mal interpreatato.
 let sessionStore = new (memoryStore(session))({
     checkPeriod: 86400000, // Prune expired entries every 24h
-    dispose: deleteTemp /* Options here*/ });
+    noDisposeOnSet : true,  dispose: deleteTemp  /* Dispose è operazione che avviene sempre quando si elimina.*/});
 
 
 /** I dati su req.session sono salati a lato server (sicuro) nel nostro sessionStore (credo).*/
@@ -55,11 +54,10 @@ export function setSession(session, type, metadata, src = null){
     /** Controllo sul tipo di sessione, data da csv ha anche un file temporaneo.*/
     if(session.hdConfig === 'csv') session.hdFilePath = src;
 
-    return session;
 }
 
 /** @deprecated: A scopo di monitoraggio.**/
-let checkSessions = setInterval(()=> sessionStore.all((err,session)=> {if (err) console.log(err)}), 3000)
+let checkSessions = setInterval(()=> sessionStore.all((err,session)=> { console.log(session)}), 3000)
 
 
 export default sessionRouter;
