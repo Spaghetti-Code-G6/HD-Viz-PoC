@@ -48,7 +48,7 @@ csvRouter.post('/upload', async (req, res) =>{
             }
         }
         /** Settaggio corretto della sessione corrente.*/
-        req.session = setSession(req.session, 'csv', metaData, fileName);
+        req.session = setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
         res.send({url: req.files.tempFilePath, meta: metaData})
     } else {res.send({err:'Errore in formato file.'});}
 })
@@ -78,18 +78,6 @@ function read(limit, path){
 
     }));
 }
-
-/** Gestione degli elementi temporanei con stream. Più semplice da comprendere. Ad intervalli crea uno stream dall array
- *  di elementi da eliminare e li elimina in modo asincrono.*/
-const streamGarbageCollector =  setInterval(() => {
-    /** @type {String} filePath: Percorso dei file temporanei.*/
-    const filePath = 'server/csv/tmp/';
-
-    new stream.Readable.from(deleteBuffer)
-        .on('data',(chunk)=> fs.unlink(filePath + chunk, err =>{ if(err) console.log(err) }))
-        .on('end', () => console.log('Finita eliminazione'))
-        .on('error',(err)=> console.log('err : '+ err));
-}, 6000*3 ) /* Intervallo di ripetizione.*/
 
 export default csvRouter;
 

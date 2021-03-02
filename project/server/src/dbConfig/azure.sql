@@ -1,2 +1,1 @@
-select * from
-datab where datab = a;
+select * from tabella;
