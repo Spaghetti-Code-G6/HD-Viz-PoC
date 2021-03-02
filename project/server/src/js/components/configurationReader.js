@@ -1,5 +1,4 @@
 /** Lettura delle diverse configurazioni database che si possono effettuare e le relative query.*/
-
 import fs from 'fs'
 
 /** Folder Structure: ( Ogni configurazione è dotato di due file)
@@ -35,15 +34,21 @@ function makeConfigs() {
     return config;
 }
 /** Oggetto di configurazione.*/
-let config = makeConfigs();
+const config = makeConfigs();
 
 /** Funzione per ottenere i dati sicuri da mandare al front end. Nome e descrizione del db e indice della lista di
  *  configurazioni in modo da poter poi accedere rapidamente alla scelta dell utente.
  *  @return {Array<Object>} : Lista dei dati sicuri e indice degli elementi. */
 config.secureSend = () => {
+
+    /** Array di appoggio per le configurazioni che vanno estratte in modo da non mandare dati sensibili.*/
     let returnObject = [];
-    config.forEach( (val, index) => returnObject.push({name : val.name, description : val.description, index : index}));
+
+    config.forEach( (val, index) =>
+        returnObject.push({name : val.name, description : val.description, index : index}));
+
     return returnObject;
+
 }
 
 export default config

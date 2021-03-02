@@ -1,38 +1,24 @@
-import Express from 'express';ù
-/** https://github.com/expressjs/session#readme */
-import session from 'express-session'
+import express from 'express';
 
-/** https://www.npmjs.com/package/memorystore
- *  Il memory store è un modo di archiviazione delle sessioni su memoria molto performante.
- *  Meglio usare questo vista la nostra applicazione invece di un database.*/
-import memoryStore from 'memorystore'
 
-/** Routes. Upcoming structure:
- *  - Retrieve Data Route (SQL + CSV ? o li divido?)
- *  - Session Manager
- *  - Editor Middleware */
+import sessionRouter from './src/js/components/sessionManager.js';
+import csvRoute from "./src/js/routes/csvRoute.js";
 
-import CSVRouter from "./src/js/CSVRoute.js";
-import mainRouter  from "./src/js/MainRoute.js"
-import editRouter from "./src/js/EditMeta.js";
+/** File di configurazione di accesso al database e dati relativi.*/
+import config from './src/js/components/configurationReader.js'
 
-import config from './src/js/ConfigurationReader.js'
 
-const PORT = 8085;
 
-let hdViz = Express()
+let hdViz = express()
+const PORT = 8085; /** Porta alla quale il server fa ascolto.*/
 
-/** Sessione utente. TODO: Implement store.*/
-hdViz.use(session({secret: 'Spaghetti'}))
+/** Percorsi accessibili staticamente.*/
+hdViz.use('/public', express.static( 'client'))
+hdViz.use('/server/csv/tmp', express.static('server/csv/tmp'))
 
-/** Routing di file statici accessibili:*/
-hdViz.use('/public', Express.static( 'client'))
-hdViz.use('/server/csv/tmp', Express.static('server/csv/tmp'))
 
-/** Routing personalizzati:*/
-hdViz.use('/csv', CSVRouter)
-hdViz.use('/update', editRouter)
-hdViz.use(mainRouter) /* Percorso di base.*/
+hdViz.use(sessionRouter);
+hdViz.use('/csv', csvRoute);
 
 /** @deprecated*/
 hdViz.get('/db/list', ((req, res) => res.send(config.secureSend())))
