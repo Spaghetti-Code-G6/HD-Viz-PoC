@@ -11,12 +11,12 @@ let valid_keys = [];
 let non_numeric_keys = [];
 let non_numeric_values = [];
 const radius = 2;
-const colors = ["blue", "red", "green"];
+const colors = ["blue", "red", "green", "yellow"];
 
 /*
 * Descrivere
 */
-function create_axis(axis) {
+function createAxis(axis) {
 	if (axis == "x") {
 		x_scales.forEach((element) => {
 			x_axis.push(d3.axisBottom(element).ticks(x_number_of_ticks))
@@ -33,7 +33,7 @@ function create_axis(axis) {
 /*
 * Descrivere
 */
-function create_scales() {
+function createScales() {
 	let current_x_scale;
 	let current_y_scale;
 	let numeric_dimensions = 0;
@@ -105,7 +105,7 @@ function plot(key = non_numeric_keys[0]) {
 	const svg = d3.select("svg");
 	const aux_data = dataset[0];
 	const keys = Object.keys(aux_data);
-	convert_dataset_to_array();
+	convertDatasetToArray();
 	let coord = [];
 
 	y_scales.forEach((element, i) => {
@@ -206,15 +206,14 @@ function checkDimensionNumber(obj, checked) {
 /*
 * Descrivere
 */
-function adapt_scatter_plot(obj, checked) {
+function adaptScatterPlot(obj, checked) {
 	checkDimensionNumber(obj, checked);
-	
 }
 
 /*
 * Descrivere
 */
-function still_not_existing_function(value, selectedIndex) {
+function stillNotExistingFunction(value, selectedIndex) {
 	console.log('value: ' + value);
 	console.log('selectedIndex: ' + selectedIndex);
 }
@@ -231,27 +230,62 @@ function isDatasetEmpty(dataset) {
 }
 
 /*
+* Crea nel HTML le dimensioni contenute nel aux_data
+*/
+function injectDimensionsInHTML(element, aux_data) {
+	for (key in aux_data) {
+		tags.push(key); // ??
+
+		element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({ key }) + `</label>`;
+		element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
+			+ ((tags.length <= max_dimensions) ? "checked" : "")
+			+ ` onchange = 'adaptScatterPlot(this, checked)' value = '${key}' />`;
+		element.innerHTML += `</div>`;
+	}
+}
+
+/*
+* Crea nel HTML la select per le dimensioni non numeriche
+*/
+function injectSelectionInHTML(element, non_numeric_keys) {
+	element.innerHTML += "<br/>"
+	element.innerHTML += "<label for='color_selection'>Colora una dimensione: </label>"
+	element.innerHTML += "<select id = 'color_selection' onchange = 'stillNotExistingFunction(value, selectedIndex)'>";
+	const select = document.getElementById("color_selection");
+	non_numeric_keys.forEach((element) => {
+		select.innerHTML += `<option value = '${element}'> ${element}</option>`
+	});
+	element.innerHTML += "</select>"
+}
+
+/*
+* Crea scale, assi e plotta
+*/
+function run() {
+	console.log("Added HTML ")
+	createScales(); // ??
+	console.log("Created scale")
+	createAxis("x"); // ??
+	createAxis("y"); // ??
+	console.log("Created axis")
+	plot();
+	console.log("Plotted")
+}
+
+/*
 * Descrivere
 */
-function draw_scatter_plot(dataset) {
+function drawScatterPlot(dataset) {
 	if (!isDatasetEmpty(dataset)) {
 		let start = performance.now()
-		clear_all();
+		clearAll();
 		console.log("Started")
 
 		const element = document.getElementById("dimensionSelection");
 		const aux_data = dataset[0];
-		const keys = Object.keys(aux_data); // Nome di ogni dimensione
+		const keys = Object.keys(aux_data); // nome di ogni dimensione
 
-		for (key in aux_data) {
-			tags.push(key); // ??
-
-			element.innerHTML += `<div><label for = '${key}'> ` + make_readable({ key }) + `</label>`;
-			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
-				+ ((tags.length <= max_dimensions) ? "checked" : "")
-				+ ` onchange = 'adapt_scatter_plot(this, checked)' value = '${key}' />`;
-			element.innerHTML += `</div>`;
-		}
+		injectDimensionsInHTML(element, aux_data);
 
 		keys.forEach((element) => {
 			if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions) {
@@ -279,27 +313,9 @@ function draw_scatter_plot(dataset) {
 			}
 		}
 
-		element.innerHTML += "<br/>"
-		element.innerHTML += "<label for='color_selection'>Colora una dimensione: </label>"
+		injectSelectionInHTML(element, non_numeric_keys);
 
-		element.innerHTML += "<select id = 'color_selection' onchange = 'still_not_existing_function(value, selectedIndex)'>";
-		const select = document.getElementById("color_selection");
-
-		non_numeric_keys.forEach((element) => {
-			select.innerHTML += `<option value = '${element}'> ${element}</option>`
-		});
-
-		element.innerHTML += "</select>"
-
-		console.log("Added HTML ")
-
-		create_scales(); // ??
-		console.log("Created scale")
-		create_axis("x"); // ??
-		create_axis("y"); // ??
-		console.log("Created axis")
-		plot();
-		console.log("Plotted")
+		run();
 
 		let end = performance.now();
 		console.log(`Execution time: ${end - start}ms`);

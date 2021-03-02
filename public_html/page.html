@@ -3,13 +3,12 @@
 
 <head>
 	<title>PoC - HD-Viz</title>
-
 	<meta charset="utf-8">
-
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <script type="text/javascript" src="aux_for_samuel.js"></script>
-<script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
+<script type="text/javascript" src="d3.v6.min.js"></script>
 <script type="text/javascript" src="data_display.js"></script>
 <script type="text/javascript" src="scatter_plot_matrix.js"></script>
 <script type="text/javascript" src="aux_functions.js"></script>
@@ -18,49 +17,16 @@
 
 <body onload="main()">
 
-	<!--
-<h1>Scatter plot matrix</h1>
-
-<div id = 'various_buttons'>
-	
-	<button onclick = "invertColors()">Bottone 1</button>
-	<button>Bottone 2</button>
-	<button>Bottone 3</button>
-
-	<label for = "checkbox_1">Banana</label>
-	<input id = "checkbox_1" type="checkbox" name="banana" />
-	<label for = "checkbox_2">Banana 2</label>
-	<input id = "checkbox_2" type="checkbox" name="banana" />
-	
-	<label for = "fagioli_1">Fagioli</label>
-	<input id = "fagioli_1" type="radio" name="fagioli" checked>
-	<label for = "fagioli_2">Fagioli 2</label>
-	<input id = "fagioli_2"type="radio" name="fagioli">
-
-	<select>
-		
-		<option value = "" class = "no_display"></option>
-		<option value = "csv">CSV</option>
-		<option value = "db" class = "no_display">Database</option>
-
-	</select>
-	-->
-
 	<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
-
 		<input type="file" name="csvFile" id="csvFile" />
-		<input type='button' value='Carica file' onclick="send_data()" />
-
+		<input type='button' value='Carica file' onclick="sendData()" />
 	</form>
-
-	<!--</div>-->
 
 	<div id="tooltip"></div>
 
 	<div id='scatter_plot_content'></div>
 
-	<div id="dimensionSelection">
-	</div>
+	<div id="dimensionSelection"></div>
 
 </body>
 

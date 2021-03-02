@@ -13,7 +13,7 @@ function main() {
 		.attr("height", h);
 }
 
-function send_data() {
+function sendData() {
 	let file = document.getElementById("csvFile").files[0];
 	const formData = new FormData();
 	formData.append('csvFile', file);
@@ -31,7 +31,7 @@ function send_data() {
 				dataset.push(data);
 			})
 			.then(() => {
-				draw_scatter_plot(dataset);
+				drawScatterPlot(dataset);
 			})
 		});
 }

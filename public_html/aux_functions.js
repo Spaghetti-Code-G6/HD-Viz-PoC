@@ -1,13 +1,13 @@
 let array_dataset = [];
 
-function make_readable(str) {
+function makeReadable(str) {
 	// TODO: Migliorarle
 	let aux = str.key.replace("_", " ");
 	aux = aux.charAt(0).toUpperCase() + aux.slice(1);
 	return aux;
 }
 
-function clear_all() {
+function clearAll() {
 	x_scales = [];
 	y_scales = [];
 	tags = [];
@@ -22,10 +22,8 @@ function clear_all() {
 	d3.select("svg").selectAll("*").remove();
 }
 
-function convert_dataset_to_array() {
+function convertDatasetToArray() {
 	array_dataset = [];
-	//console.log("converting")
-	//console.log(valid_keys)
 
 	dataset.forEach((element) => {
 		let temp_array = [];
@@ -36,6 +34,4 @@ function convert_dataset_to_array() {
 		}
 		array_dataset.push(temp_array);
 	});
-	//console.log(array_dataset);
-	//console.log(Object.values(dataset[0]));
 }
