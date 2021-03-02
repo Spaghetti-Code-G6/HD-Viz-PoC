@@ -254,7 +254,7 @@ function draw_scatter_plot(dataset) {
 		}
 
 		keys.forEach((element) => {
-			if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions && isNaN(Date.parse(`${aux_data[element]}`))) {
+			if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions) {
 				valid_keys.push(element); // dimensioni numeriche
 			}
 		});
