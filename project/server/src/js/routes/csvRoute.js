@@ -24,21 +24,16 @@ csvRouter.use(uploader({
  *  i parametri della sessione corrente in modo da poter gestire perdite di connessioni.*/
 csvRouter.post('/upload', async (req, res) =>{
 
-
     if(req.files) { /* Caricato con successo il file.*/
         if (checkCsv(req.files.csvFile.name)) {
-
-            let metaData = [];
-
             const firstLines = await read(2, req.files.csvFile.tempFilePath);
-
+            /* Riga di testa e prima riga di record divisi per campo.*/
             firstLines[0] = firstLines[0].split(',');
             firstLines[1] = firstLines[1].split(',');
 
+            let metaData = [];
             for (let i = 0; i < firstLines[0].length; i++) {
-
-                metaData[i] = {
-                    /** Entry di metadata per ogni campo di tipo del nostro file csv.*/
+                metaData[i] = {/** Entry di metadata per ogni campo di tipo del nostro file csv.*/
                     header: firstLines[0][i], visibility: true, /* Nome campo, visibilità e tipo.*/
                     type: !isNaN(+firstLines[1][i]) ? typeof +firstLines[1][i] : typeof firstLines[1][i],
                 }
@@ -46,9 +41,7 @@ csvRouter.post('/upload', async (req, res) =>{
             /** Settaggio corretto della sessione corrente.*/
             setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
             res.send({url: req.files.tempFilePath, meta: metaData})
-        } else {
-            res.send({err: 'Errore in formato file.'});
-        }
+        } else res.send({err: 'Errore in formato file.'})
     }
 })
 

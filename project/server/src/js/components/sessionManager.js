@@ -46,7 +46,7 @@ sessionRouter.use('/session', (req, res) => res.send({sess : req.session}));
 /** Settaggio della sessione corrente da dati di caricamento.
  *  @param session: Elemento di rappresentazione della sessione da impostare.
  *  @param {String} type: Stringa di tipo di configurazione (csv, db).
- *  @param {JSON} metadata: Meta dati dei dati caricati.
+ *  @param {[]} metadata: Meta dati dei dati caricati.
  *  @param {String} src: Indirizzo fisico del file temporaneo in caso di uso di type === 'csv'.*/
 export function setSession(session, type, metadata, src = null){
 
