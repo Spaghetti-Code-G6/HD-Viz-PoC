@@ -22,7 +22,7 @@ csvRouter.use(uploader({
 
 /** Effettua il caricamento del csv e il reperimento dei dati interessati alla creazione del grafico, istanziando
  *  i parametri della sessione corrente in modo da poter gestire perdite di connessioni.*/
-csvRouter.post('/upload', async (req, res) =>{
+csvRouter.post('/file', async (req, res) =>{
 
     if(req.files) { /* Caricato con successo il file.*/
         if (checkCsv(req.files.csvFile.name)) {
@@ -41,7 +41,8 @@ csvRouter.post('/upload', async (req, res) =>{
             }
             /** Settaggio corretto della sessione corrente.*/
             setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
-            res.send({url: req.files.tempFilePath, meta: metaData})
+            console.log(req.files.csvFile.tempFilePath)
+            res.send({url: await req.files.csvFile.tempFilePath, meta: metaData})
         } else res.send({err: 'Errore in formato file.'})
     }
 })

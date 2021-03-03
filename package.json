@@ -2,6 +2,12 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "memorystore": "^1.6.5"
+  },
+  "type": "module",
+  "devDependencies": {
+    "express-session": "^1.17.1",
+    "sequelize": "^6.5.0"
   }
 }
