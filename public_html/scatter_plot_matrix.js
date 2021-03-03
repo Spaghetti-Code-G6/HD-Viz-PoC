@@ -288,13 +288,13 @@ function drawScatterPlot(dataset) {
 		injectDimensionsInHTML(element, aux_data);
 
 		keys.forEach((element) => {
-			if (!isNaN(parseFloat(`${aux_data[element]}`)) && valid_keys.length < max_dimensions) {
+			if (!isNaN(+(`${aux_data[element]}`)) && valid_keys.length < max_dimensions) {
 				valid_keys.push(element); // dimensioni numeriche
 			}
 		});
 
 		for (key in aux_data) {
-			if (valid_keys.indexOf(key) == -1 && isNaN(parseFloat(`${aux_data[element]}`))) {
+			if (valid_keys.indexOf(key) == -1 && isNaN(+(`${aux_data[element]}`))) {
 				non_numeric_keys.push(key); // dimensioni NON numeriche
 			}
 		}
