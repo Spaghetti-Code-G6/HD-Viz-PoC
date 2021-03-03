@@ -1,20 +1,18 @@
-body{
-	color: #fff;
-	/*background-color: #212121;*/
-    background-color: white;
+body {
+  background-color: white;
 }
-/*=====================*/
+
 #scatter_plot_content {
   display: inline;
 }
 
 #dimensionSelection {
   display: inline;
-    float: right;
-    color: black;
-    border: 1px solid black;
-    padding: 0.5em;
-    width: 20%;
+  float: right;
+  color: black;
+  border: 1px solid black;
+  padding: 0.5em;
+  width: 20%;
 }
 
 #dimensionSelection li {
@@ -25,13 +23,13 @@ body{
   display: inline-block;
   margin-bottom: 3em;
 }
-/*================*/
-.no_display{
 
-	display: none;
+.no_display {
+  display: none;
 }
-/*
-#dimensionSelection input{
+
+#dimensionSelection input {
+}
 
 svg {
   background-color: #fff;
@@ -39,63 +37,56 @@ svg {
 }
 
 .axis {
-
-	stroke: black;
-	stroke-width: .7;
+  stroke: black;
+  stroke-width: 0.7;
 }
 
-.tick{
-
-	stroke: black;
-	fill: black;
+.tick {
+  stroke: black;
+  fill: black;
 }
 
-.tick text{
-
-	stroke: none;
-	color: black;
+.tick text {
+  stroke: none;
+  color: black;
 }
 
-.no_tick text{
-
-	display: none;
+.no_tick text {
+  display: none;
 }
 
-.axis path{
-
-	stroke: black;
-	fill: none;
+.axis path {
+  stroke: black;
+  fill: none;
 }
 
-/*====================================*/
-#titolo h1{
-    color: black;
+#titolo h1 {
+  color: black;
 }
 
-#form-inserimento{
-    background-color: #212121;
-    padding: .5em;
-    display: none;
-    margin-bottom: 1em;
-    width: 40%;
+#form-inserimento {
+  background-color: #909090;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  width: 40%;
 }
 
-#form-inserimento input{
-    padding: .5em;
+#form-inserimento input {
+  padding: 0.5em;
 }
 
-#menu ul{
-    list-style: none;
-    display: flex;
-    padding-left: 0em;
+#menu ul {
+  list-style: none;
+  display: flex;
+  padding-left: 0em;
 }
 
-#menu li{
-    margin-right: .5em;
+#menu li {
+  margin-right: 0.5em;
 }
 
-#menu button{
-    padding: .5em;
+#menu button {
+  padding: 0.5em;
 }
 
 /* Style the tab */
@@ -133,9 +124,13 @@ svg {
   padding: 6px 12px;
   border: 1px solid #ccc;
   border-top: none;
-    background: #B8B8B8;
+  background: #b8b8b8;
 }
 
-.tabcontent h1, p{
-    color: black
+#ScatterPlot {
+  display: block;
+}
+
+.tabcontent h2, p {
+  color: black;
 }
