@@ -7,7 +7,7 @@ const app = express();
 
 let data = [];
 
-console.log("Running");
+console.log("Running at http://localhost:30080/");
 
 app.use(express.static('public_html/'));
 

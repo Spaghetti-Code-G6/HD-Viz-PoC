@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PoC - HD-Viz</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript" src="aux_for_samuel.js"></script>
+		<script type="text/javascript" src="d3.v6.min.js"></script>
+		<script type="text/javascript" src="data_display.js"></script>
+		<script type="text/javascript" src="scatter_plot_matrix.js"></script>
+		<script type="text/javascript" src="aux_functions.js"></script>
+	</head>
+	<body onload="main()">
+		<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
+			<input type="file" name="csvFile" id="csvFile" />
+			<input type='button' value='Carica file' onclick="sendData()" />
+		</form>
+		<div id="tooltip"></div>
+		<div id='scatter_plot_content'></div>
+		<div id="dimensionSelection"></div>
+	</body>
+</html>
