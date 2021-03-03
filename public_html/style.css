@@ -1,21 +1,20 @@
-body {
-  margin-left: 5em;
-  margin-top: 2em;
-  color: #fff;
-  background-color: #888888;
+body{
+	color: #fff;
+	/*background-color: #212121;*/
+    background-color: white;
 }
-
-form {
-  margin-bottom: 1em;
-}
-
+/*=====================*/
 #scatter_plot_content {
   display: inline;
 }
 
 #dimensionSelection {
   display: inline;
-  float: right;
+    float: right;
+    color: black;
+    border: 1px solid black;
+    padding: 0.5em;
+    width: 20%;
 }
 
 #dimensionSelection li {
@@ -26,10 +25,13 @@ form {
   display: inline-block;
   margin-bottom: 3em;
 }
+/*================*/
+.no_display{
 
-.no_display {
-  display: none;
+	display: none;
 }
+/*
+#dimensionSelection input{
 
 svg {
   background-color: #fff;
@@ -37,25 +39,103 @@ svg {
 }
 
 .axis {
-  stroke: black;
-  stroke-width: 0.7;
+
+	stroke: black;
+	stroke-width: .7;
 }
 
-.tick {
-  stroke: black;
-  fill: black;
+.tick{
+
+	stroke: black;
+	fill: black;
 }
 
-.tick text {
-  stroke: none;
-  color: black;
+.tick text{
+
+	stroke: none;
+	color: black;
 }
 
-.no_tick text {
+.no_tick text{
+
+	display: none;
+}
+
+.axis path{
+
+	stroke: black;
+	fill: none;
+}
+
+/*====================================*/
+#titolo h1{
+    color: black;
+}
+
+#form-inserimento{
+    background-color: #212121;
+    padding: .5em;
+    display: none;
+    margin-bottom: 1em;
+    width: 40%;
+}
+
+#form-inserimento input{
+    padding: .5em;
+}
+
+#menu ul{
+    list-style: none;
+    display: flex;
+    padding-left: 0em;
+}
+
+#menu li{
+    margin-right: .5em;
+}
+
+#menu button{
+    padding: .5em;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
   display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+    background: #B8B8B8;
 }
 
-.axis path {
-  stroke: black;
-  fill: none;
+.tabcontent h1, p{
+    color: black
 }
