@@ -1,6 +1,5 @@
 import express from 'express';
 
-
 import sessionRouter from './src/js/components/sessionManager.js';
 import csvRoute from "./src/js/routes/csvRoute.js";
 

@@ -26,6 +26,7 @@ csvRouter.post('/upload', async (req, res) =>{
 
     if(req.files) { /* Caricato con successo il file.*/
         if (checkCsv(req.files.csvFile.name)) {
+
             const firstLines = await read(2, req.files.csvFile.tempFilePath);
             /* Riga di testa e prima riga di record divisi per campo.*/
             firstLines[0] = firstLines[0].split(',');

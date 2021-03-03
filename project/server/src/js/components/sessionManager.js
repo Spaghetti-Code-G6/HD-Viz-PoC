@@ -1,7 +1,8 @@
 import express from "express"
 /** https://github.com/expressjs/session#readme */
 import session from 'express-session'
-/**  Il memory store è un modo di archiviazione delle sessioni su memoria molto performante.
+/** https://www.npmjs.com/package/memorystore
+ *  Il memory store è un modo di archiviazione delle sessioni su memoria molto performante.
  *  Meglio usare questo vista la nostra applicazione invece di un database.*/
 import memoryStore from 'memorystore'
 import fs from "fs"
@@ -49,14 +50,18 @@ sessionRouter.use('/session', (req, res) => res.send({sess : req.session}));
  *  @param {[]} metadata: Meta dati dei dati caricati.
  *  @param {String} src: Indirizzo fisico del file temporaneo in caso di uso di type === 'csv'.*/
 export function setSession(session, type, metadata, src = null){
+    // Pare funzionare.
+    session.regenerate((err) => {if(err) console.log(err)})
 
     session.hdConfig = type; session.metadata = metadata;
-    /** Controllo sul tipo di sessione, data da csv ha anche un file temporaneo.*/
     if(session.hdConfig === 'csv') session.hdFilePath = src;
-
 }
 
 /** @deprecated: A scopo di monitoraggio.**/
-let checkSessions = setInterval(()=> sessionStore.all((err,session)=> { console.log(session)}), 3000)
+let checkSessions = setInterval(()=> sessionStore.all((err,session)=> {
+    if(err) console.log(err);
+    console.log("HERES STARTS THIS TICK" , session)
+
+}), 3000)
 
 export default sessionRouter;
