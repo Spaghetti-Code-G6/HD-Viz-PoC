@@ -1,14 +1,12 @@
-import express from "express";
+import express from "express"
 /** https://github.com/expressjs/session#readme */
 import session from 'express-session'
 /**  Il memory store è un modo di archiviazione delle sessioni su memoria molto performante.
  *  Meglio usare questo vista la nostra applicazione invece di un database.*/
 import memoryStore from 'memorystore'
-import fs from "fs";
+import fs from "fs"
 
 let sessionRouter = express.Router()
-
-export let deleteBuffer = [];
 
 /** Funzione di dispose per quando avviene evento di eliminazione di sessione. In particolare andiamo a controllare
  *  se la sessione interessata è di tipo csv per poter eliminare il file temporaneo.
@@ -19,15 +17,15 @@ function deleteTemp(key, value) {
 
     const allValues = JSON.parse(value);
     /** Posso rimuovere il file temporaneo.*/
-    if(allValues.hdConfig === 'csv') {
-        fs.unlink(allValues.hdFilePath, err => console.log(err ? err : 'Bip..  bup.  deleted ' + allValues.hdFilePath));
-    }
+    if(allValues.hdConfig === 'csv')
+        fs.unlink(allValues.hdFilePath, err => console.log(err ? err : 'Bip..  bup.  deleted : ' + allValues.hdFilePath));
+
 }
 
 
-/* Gestione delle sessioni. */
+/** Storage nella quale vengono salvate le sessioni attualmente valide. */
 let sessionStore = new (memoryStore(session))({
-    checkPeriod: 86400000, // Prune expired entries every 24h
+    checkPeriod: 86400000, // Prune expired entries every 24h ( eliminazione da memoria).
     noDisposeOnSet : true,  dispose: deleteTemp  /* Dispose è operazione che avviene sempre quando si elimina.*/});
 
 
@@ -42,12 +40,14 @@ sessionRouter.use(session({
 }));
 
 /** Ottieni i dati della sessione.*/
-sessionRouter.use('/session', (req, res) => {
-    res.send({sess : req.session})
-});
+sessionRouter.use('/session', (req, res) => res.send({sess : req.session}));
 
 
-
+/** Settaggio della sessione corrente da dati di caricamento.
+ *  @param session: Elemento di rappresentazione della sessione da impostare.
+ *  @param {String} type: Stringa di tipo di configurazione (csv, db).
+ *  @param {JSON} metadata: Meta dati dei dati caricati.
+ *  @param {String} src: Indirizzo fisico del file temporaneo in caso di uso di type === 'csv'.*/
 export function setSession(session, type, metadata, src = null){
 
     session.hdConfig = type; session.metadata = metadata;
@@ -58,6 +58,5 @@ export function setSession(session, type, metadata, src = null){
 
 /** @deprecated: A scopo di monitoraggio.**/
 let checkSessions = setInterval(()=> sessionStore.all((err,session)=> { console.log(session)}), 3000)
-
 
 export default sessionRouter;
