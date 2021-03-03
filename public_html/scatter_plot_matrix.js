@@ -36,23 +36,11 @@ function createAxis(axis) {
 function createScales() {
 	let datas = dataset[0];
 	let values = Object.values(datas);
-	
-	let i = 0;
-	values.forEach((element) => {
-		if (isNaN(element)) {
-			indexes.push(i);
-		}
-		i++;
-	});
 
-	let aux_index = 0;
-	let counter = 0;
-	const xSpaceForSingleChart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
-	const ySpaceForSingleChart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
+	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
+	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 
 	tags.forEach((dimensionName, j) => {
-		if (indexes.indexOf(j) == -1 && counter < max_dimensions) {
-
 			let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
 			let current_x_scale = d3.scaleLinear()
@@ -65,10 +53,6 @@ function createScales() {
 
 			x_scales.push(current_x_scale);
 			y_scales.push(current_y_scale);
-
-			aux_index++;
-			counter++;
-		}
 	});
 }
 
@@ -90,11 +74,9 @@ function useBlack(key) {
 function plot(key = non_numeric_keys[0]) {
 	let only_black = useBlack(key);
 
-	const xSpaceForSingleChart = (w - padding * 2 - (valid_keys.length - 1) * space_between_charts) / (valid_keys.length);
-	const y_space_for_single_chart = (h - padding * 2 - (valid_keys.length - 1) * vertical_space) / (valid_keys.length);
+	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
+	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	const svg = d3.select("svg");
-	const aux_data = dataset[0];
-	const keys = Object.keys(aux_data);
 	convertDatasetToArray();
 	let coord = [];
 
@@ -111,11 +93,8 @@ function plot(key = non_numeric_keys[0]) {
 
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
-				.call(x_axis[valid_keys.length - j - 1])
-				.attr("class", "axis" + (i != (valid_keys.length - 1) ? " no_tick" : ""));
-
-			let x_scale = x_scales[j];
-			let y_scale = y_scales[i];
+				.call(x_axis[tags.length - j - 1])
+				.attr("class", "axis" + (i != (tags.length - 1) ? " no_tick" : ""));
 
 			array_dataset.forEach((element) => {
 				let temp_coord = [];
@@ -130,15 +109,15 @@ function plot(key = non_numeric_keys[0]) {
 
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
-		const x_scale_index = auxiliary_index % valid_keys.length;
-		const y_scale_index = Math.floor(auxiliary_index / valid_keys.length);
+		const x_scale_index = auxiliary_index % tags.length;
+		const y_scale_index = Math.floor(auxiliary_index / tags.length);
 		const x_scale = x_scales[x_scale_index];
 		const y_scale = y_scales[y_scale_index];
 
 		const x = padding
 			+ x_scale(element[0])
-			+ (valid_keys.length - 1) * space_between_charts
-			+ (valid_keys.length - 1) * xSpaceForSingleChart
+			+ (tags.length - 1) * space_between_charts
+			+ (tags.length - 1) * xSpaceForSingleChart
 			- x_scale_index * space_between_charts
 			- x_scale_index * xSpaceForSingleChart;
 
@@ -185,7 +164,7 @@ function checkDimensionNumber(obj, checked) {
 				number_of_checked++;
 			}
 		});
-		if(number_of_checked > max_dimensions + 2) {
+		if(number_of_checked > max_dimensions) {
 			obj.checked = false;
 			alert("Reached max dimensions")
 		}
@@ -223,15 +202,8 @@ function isDatasetEmpty(dataset) {
 * Crea nel HTML le dimensioni contenute nel aux_data
 */
 function injectDimensionsInHTML(element, aux_data) {
-	for (key in aux_data) {
-		tags.push(key); // ??
-
-		element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({ key }) + `</label>`;
-		element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}' `
-			+ ((tags.length <= max_dimensions) ? "checked" : "")
-			+ ` onchange = 'adaptScatterPlot(this, checked)' value = '${key}' />`;
-		element.innerHTML += `</div>`;
-	}
+	
+	
 }
 
 /*
@@ -248,18 +220,9 @@ function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += "</select>"
 }
 
-/*
-* Crea scale, assi e plotta
-*/
-function run() {
-	console.log("Added HTML ")
-	createScales(); // ??
-	console.log("Created scale")
-	createAxis("x"); // ??
-	createAxis("y"); // ??
-	console.log("Created axis")
-	plot();
-	console.log("Plotted")
+function stampa(questo) {
+	
+	console.log(questo);
 }
 
 /*
@@ -269,22 +232,19 @@ function drawScatterPlot(dataset) {
 	if (!isDatasetEmpty(dataset)) {
 		let start = performance.now()
 		clearAll();
-		console.log("Started")
 
 		const element = document.getElementById("dimensionSelection");
 		const aux_data = dataset[0];
 		const keys = Object.keys(aux_data); // nome di ogni dimensione
 
-		injectDimensionsInHTML(element, aux_data);
-
-		keys.forEach((element) => {
-			if (!isNaN(+(`${aux_data[element]}`)) && valid_keys.length < max_dimensions) {
+		keys.forEach(element => {
+			if (!isNaN(+(aux_data[element]))) {
 				valid_keys.push(element); // dimensioni numeriche
 			}
 		});
 
 		for (key in aux_data) {
-			if (valid_keys.indexOf(key) == -1 && isNaN(+(`${aux_data[element]}`))) {
+			if (valid_keys.indexOf(key) == -1 && isNaN(+(aux_data[element]))) {
 				non_numeric_keys.push(key); // dimensioni NON numeriche
 			}
 		}
@@ -292,9 +252,9 @@ function drawScatterPlot(dataset) {
 		let j = 0;
 		for (key in aux_data) {
 			let aux = [];
-			dataset.forEach((element) => {
-				if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(`${element[key]}`) == -1)) {
-					aux.push(`${element[key]}`); // ??
+			dataset.forEach(element => {
+				if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(element[key]) == -1)) {
+					aux.push(element[key]); // ??
 				}
 			})
 			j++;
@@ -302,6 +262,17 @@ function drawScatterPlot(dataset) {
 				non_numeric_values.push(aux);
 			}
 		}
+
+		valid_keys.forEach(key => {
+			if(tags.length < max_dimensions) {
+				tags.push(key); // tags used for print
+			}
+			element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({key}) + `</label>`;
+			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}'`
+				+ ((tags.includes(key)) ? "checked" : "")
+				+ ` onchange = 'adaptScatterPlot(this, checked)' value = '${key}' />`;
+			element.innerHTML += `</div>`;
+		});
 
 		injectSelectionInHTML(element, non_numeric_keys);
 
@@ -318,5 +289,14 @@ function drawScatterPlot(dataset) {
 function updatePlot() {
 	console.log("updatePlot pressed");
 	console.log("valid_keys: " + valid_keys);
-	//console.log("valid_keys: " + valid_keys);
+}
+
+/*
+* Crea scale, assi e plotta
+*/
+function run() {
+	createScales(); // ??
+	createAxis("x"); // ??
+	createAxis("y"); // ??
+	plot();
 }

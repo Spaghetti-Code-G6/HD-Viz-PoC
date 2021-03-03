@@ -26,15 +26,12 @@ function sendData() {
 	fetch('/csv/file', options)
 		.then(response => response.json())
 		.then(json => {
-
-			console.log(json)
 			dataset = [];
-
 			d3.csv(json.url, (data) => {
 				dataset.push(data);
 			})
-			.then(() => {
-				drawScatterPlot(dataset);
-			})
-		});
+		.then(() => {
+			drawScatterPlot(dataset);
+		})
+	});
 }
