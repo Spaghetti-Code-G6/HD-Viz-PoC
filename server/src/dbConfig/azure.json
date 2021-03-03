@@ -1,0 +1,9 @@
+{
+  "name": "azure",
+  "description": "A database in which we have stored the sky and clounds",
+
+  "database": "databaseAddressPort",
+  "dialect": "mysql",
+  "username": "username",
+  "password": "password"
+}
