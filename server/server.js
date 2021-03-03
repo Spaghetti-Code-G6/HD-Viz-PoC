@@ -10,7 +10,7 @@ let hdViz = express()
 const PORT = 8085; /** Porta alla quale il server fa ascolto.*/
 
 /** Percorsi accessibili staticamente.*/
-hdViz.use('/public', express.static( 'client'))
+hdViz.use('/', express.static( 'public_html'))
 hdViz.use('/server/csv/tmp', express.static('server/csv/tmp'))
 
 

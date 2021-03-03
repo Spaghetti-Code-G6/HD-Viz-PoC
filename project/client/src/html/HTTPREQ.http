@@ -1,4 +1,0 @@
-GET http://localhost:8085/
-Accept: application/json
-
-###
