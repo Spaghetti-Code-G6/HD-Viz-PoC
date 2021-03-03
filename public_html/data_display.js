@@ -1,7 +1,7 @@
 let dataset = [];
 
-const w = 900;
-const h = 600;
+const w = 1080;
+const h = 720;
 const padding = 65;
 const space_between_charts = 0;
 const vertical_space = 0;
