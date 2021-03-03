@@ -10,9 +10,10 @@ body {
   display: inline;
   float: right;
   color: black;
-  border: 1px solid black;
-  padding: 0.5em;
+  background-color: #cfcfcf;
   width: 20%;
+  border-radius: 5px;
+  padding: 1em;
 }
 
 #dimensionSelection li {
@@ -26,9 +27,6 @@ body {
 
 .no_display {
   display: none;
-}
-
-#dimensionSelection input {
 }
 
 svg {
@@ -65,8 +63,9 @@ svg {
 }
 
 #form-inserimento {
-  background-color: #909090;
-  padding: 0.5em;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  padding: 1em;
   margin-bottom: 1em;
   width: 40%;
 }
@@ -92,8 +91,8 @@ svg {
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  background-color: #e8e8e8;
+  border-radius: 5px;
 }
 
 /* Style the buttons inside the tab */
@@ -122,15 +121,15 @@ svg {
 .tabcontent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
   border-top: none;
-  background: #b8b8b8;
+  background: #e8e8e8;
 }
 
 #ScatterPlot {
   display: block;
 }
 
-.tabcontent h2, p {
+.tabcontent h2,
+p {
   color: black;
 }
