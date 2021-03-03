@@ -5,3 +5,4 @@ node_modules/
 node/
 run.cmd
 public_html/tmp/
+.idea/
