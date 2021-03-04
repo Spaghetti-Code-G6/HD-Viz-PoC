@@ -35,7 +35,8 @@ sessionRouter.use(session({
     cookie: { maxAge: 30000 }, /* Età massima del cookie prima di perdere validità. */
     store: sessionStore,    /* Magazzino delle sessioni. */
     secret: 'Spaghetti',
-    saveUninitialized: true
+    saveUninitialized: true,
+    resave: false
 
 }));
 
