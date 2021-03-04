@@ -1,15 +1,17 @@
 let x_scales = [];
 let y_scales = [];
-let tags = [];
-const max_dimensions = 5;
 let indexes = [];
 let x_axis = [];
 let y_axis = [];
-const x_number_of_ticks = 2;
-const y_number_of_ticks = 2;
+
+let tags = []; // printed dimensions
 let valid_keys = [];
 let non_numeric_keys = [];
 let non_numeric_values = [];
+
+const max_dimensions = 5;
+const x_number_of_ticks = 2;
+const y_number_of_ticks = 2;
 const radius = 3;
 const colors = ["blue", "red", "green"];
 
@@ -34,9 +36,6 @@ function createAxis(axis) {
 * Crea e plotta le scale
 */
 function createScales() {
-	let datas = dataset[0];
-	let values = Object.values(datas);
-
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
 	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 
@@ -150,36 +149,6 @@ function plot(key = non_numeric_keys[0]) {
 }
 
 /*
-* Controlla che il numero di dimensioni selezionate non superi il limite
-*/
-function checkDimensionNumber(obj, checked) { 
-	let number_of_checked = 0;
-	let checked_values = [];
-
-	if(checked){
-		let div_element = document.getElementById("dimensionSelection");
-		let childs = div_element.childNodes;
-		childs.forEach((element) => {
-			if(element.nodeName == "INPUT" && element.checked) {
-				number_of_checked++;
-			}
-		});
-		if(number_of_checked > max_dimensions) {
-			obj.checked = false;
-			alert("Reached max dimensions")
-		}
-	}
-}
-
-/*
-* Descrivere
-*/
-function adaptScatterPlot(obj, checked) {
-	checkDimensionNumber(obj, checked);
-	
-}
-
-/*
 * TODO: implement coloring on dimension
 */
 function colorDimension(value, selectedIndex) {
@@ -199,14 +168,6 @@ function isDatasetEmpty(dataset) {
 }
 
 /*
-* Crea nel HTML le dimensioni contenute nel aux_data
-*/
-function injectDimensionsInHTML(element, aux_data) {
-	
-	
-}
-
-/*
 * Crea nel HTML la select per le dimensioni non numeriche
 */
 function injectSelectionInHTML(element, non_numeric_keys) {
@@ -220,9 +181,56 @@ function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += "</select>"
 }
 
+/*
+* Solo per DEBUG
+*/
 function stampa(questo) {
-	
 	console.log(questo);
+}
+
+/*
+* Controlla che il numero di dimensioni selezionate non superi il limite
+*/
+function checkDimensionNumber(obj, checked) { 
+	let number_of_checked = 0;
+
+	if(checked){
+		let div_element = document.getElementById("dimensionSelection");
+		let childs = div_element.childNodes;
+		childs.forEach((element) => {
+			if(element.nodeName == "INPUT" && element.checked) {
+				number_of_checked++;
+			}
+		});
+		if(number_of_checked > max_dimensions) {
+			obj.checked = false;
+			alert("Reached max dimensions");
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
+* Descrivere
+*/
+function adaptScatterPlot(obj, checked) {
+	stampa(obj);
+	stampa(checked);
+	stampa("prima");
+	stampa(tags);
+	if(checkDimensionNumber(obj, checked)){
+		if(checked)
+			tags.push(obj.value);	
+		else
+			tags = tags.filter(nameDimension => nameDimension != obj.value);
+	}
+	stampa("dopo");
+	stampa(tags);
+	d3.select("svg").selectAll("*").remove();
+	createScales(); // ??
+	createAxis("x"); // ??
+	createAxis("y"); // ??
 }
 
 /*
@@ -265,7 +273,7 @@ function drawScatterPlot(dataset) {
 
 		valid_keys.forEach(key => {
 			if(tags.length < max_dimensions) {
-				tags.push(key); // tags used for print
+				tags.push(key); // printed dimensions
 			}
 			element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({key}) + `</label>`;
 			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}'`
