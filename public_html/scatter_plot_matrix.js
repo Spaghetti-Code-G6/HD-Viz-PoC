@@ -1,12 +1,11 @@
 let x_scales = [];
 let y_scales = [];
-let indexes = [];
 let x_axis = [];
 let y_axis = [];
 
 let tags = []; // printed dimensions
-let valid_keys = [];
-let non_numeric_keys = [];
+let valid_keys = []; // Tutte le dimensioni numeriche
+let non_numeric_keys = []; // Tutte le dimensioni NON numeriche
 let non_numeric_values = [];
 
 const max_dimensions = 5;
@@ -78,13 +77,12 @@ function plot(key = non_numeric_keys[0]) {
 	const svg = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
-
 	y_scales.forEach((element, i) => {
 		let beginning_y = padding + i * vertical_space + i * y_space_for_single_chart;
-
+		stampa("Asse y")
 		x_scales.forEach((inner_element, j) => {
 			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart;
-
+			stampa("Asse x")
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
 				.call(y_axis[i])
@@ -103,9 +101,9 @@ function plot(key = non_numeric_keys[0]) {
 			});
 		});
 	});
+	stampa("FINE")
 
 	let aux = 0;
-
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
@@ -215,22 +213,36 @@ function checkDimensionNumber(obj, checked) {
 * Descrivere
 */
 function adaptScatterPlot(obj, checked) {
-	stampa(obj);
-	stampa(checked);
-	stampa("prima");
-	stampa(tags);
+	//stampa(obj);
+	//stampa(checked);
+	//stampa("prima");
+	//stampa(tags);
 	if(checkDimensionNumber(obj, checked)){
 		if(checked)
 			tags.push(obj.value);	
 		else
 			tags = tags.filter(nameDimension => nameDimension != obj.value);
 	}
-	stampa("dopo");
-	stampa(tags);
-	d3.select("svg").selectAll("*").remove();
-	createScales(); // ??
-	createAxis("x"); // ??
-	createAxis("y"); // ??
+	//stampa("dopo");
+	//stampa(tags);
+	//createScales(); // ??
+	//createAxis("x"); // ??
+	//createAxis("y"); // ??
+
+	if (tags.length != 0) {
+		d3.select("svg").selectAll("*").remove();
+		x_scales = [];
+		y_scales = [];
+		x_axis = [];
+		y_axis = [];
+		run();
+	} else {
+		d3.select("svg").selectAll("*").remove();
+		x_scales = [];
+		y_scales = [];
+		x_axis = [];
+		y_axis = [];
+	}
 }
 
 /*
@@ -257,6 +269,7 @@ function drawScatterPlot(dataset) {
 			}
 		}
 
+		// A cosa serve questa?
 		let j = 0;
 		for (key in aux_data) {
 			let aux = [];
@@ -290,7 +303,9 @@ function drawScatterPlot(dataset) {
 		run();
 
 		let end = performance.now();
-		console.log(`Execution time: ${end - start}ms`);
+		console.log(`Execution time: ${((end - start)/1000).toFixed(2)} seconds`);
+	} else {
+		alert("dataset empty!!!")
 	}
 }
 
