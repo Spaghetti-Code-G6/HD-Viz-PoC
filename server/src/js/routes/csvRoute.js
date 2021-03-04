@@ -29,20 +29,24 @@ csvRouter.post('/file', async (req, res) =>{
 
             const firstLines = await read(2, req.files.csvFile.tempFilePath);
             /* Riga di testa e prima riga di record divisi per campo.*/
-            firstLines[0] = firstLines[0].split(',');
-            firstLines[1] = firstLines[1].split(',');
+            if(firstLines.length > 1) {
 
-            let metaData = [];
-            for (let i = 0; i < firstLines[0].length; i++) {
-                metaData[i] = {/** Entry di metadata per ogni campo di tipo del nostro file csv.*/
-                    header: firstLines[0][i], visibility: true, /* Nome campo, visibilità e tipo.*/
-                    type: !isNaN(+firstLines[1][i]) ? typeof +firstLines[1][i] : typeof firstLines[1][i],
+                firstLines[0] = firstLines[0].split(',');
+                firstLines[1] = firstLines[1].split(',');
+
+                let metaData = [];
+                for (let i = 0; i < firstLines[0].length; i++) {
+                    metaData[i] = {
+                        /** Entry di metadata per ogni campo di tipo del nostro file csv.*/
+                        header: firstLines[0][i], visibility: true, /* Nome campo, visibilità e tipo.*/
+                        type: !isNaN(+firstLines[1][i]) ? typeof +firstLines[1][i] : typeof firstLines[1][i],
+                    }
                 }
-            }
-            /** Settaggio corretto della sessione corrente.*/
-            setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
-            console.log(req.files.csvFile.tempFilePath)
-            res.send({url: await req.files.csvFile.tempFilePath, meta: metaData})
+                /** Settaggio corretto della sessione corrente.*/
+                setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
+                console.log(req.files.csvFile.tempFilePath)
+                res.send({url: await req.files.csvFile.tempFilePath, meta: metaData})
+            } else{ res.send({err: 'Errore nella dimensione del file'}); }
         } else res.send({err: 'Errore in formato file.'})
     }
 })
@@ -50,9 +54,9 @@ csvRouter.post('/file', async (req, res) =>{
 function checkCsv(fileName) { return fileName.substr(fileName.length - 4) === '.csv'; }
 
 
-/** @param {number} limit: Righe che si vogliono estrarre a partire da 0.
- *  @param {string} path: Percorso del file.
- *  @return {Promise} : Righe lette e salvate.*/
+/** @param  limit : number Righe che si vogliono estrarre a partire da 0.
+ *  @param  path : String Percorso del file.
+ *  @return {Promise<Array>} : Righe lette e salvate.*/
 function read(limit, path){
 
     const readStream = readLine.createInterface({ input: fs.createReadStream(path)})
