@@ -46,7 +46,7 @@ function convertDatasetToArray() {
 	dataset.forEach((element) => {
 		let temp_array = [];
 		for (key in element) {
-			if (tags.indexOf(key) != -1) {
+			if (tags.includes(key)) {
 				temp_array.push(+(element[key]));
 			}
 		}

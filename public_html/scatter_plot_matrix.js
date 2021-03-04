@@ -19,11 +19,11 @@ const colors = ["blue", "red", "green", "cyan", "purple", "brown", "violet", "gr
 */
 function createAxis(axis) {
 	if (axis == "x") {
-		x_scales.forEach((element) => {
+		x_scales.forEach(element => {
 			x_axis.push(d3.axisBottom(element).ticks(x_number_of_ticks))
 		});
 	} else if (axis == "y") {
-		y_scales.forEach((element) => {
+		y_scales.forEach(element => {
 			y_axis.push(d3.axisLeft(element).ticks(y_number_of_ticks))
 		});
 	} else {
@@ -37,20 +37,19 @@ function createAxis(axis) {
 function createScales() {
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
 	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
-
 	tags.forEach((dimensionName, j) => {
-			let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
+		let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
-			let current_x_scale = d3.scaleLinear()
-				.domain([d3MinMax[0], d3MinMax[1]])
-				.range([0, xSpaceForSingleChart])
+		let current_x_scale = d3.scaleLinear()
+			.domain([d3MinMax[0], d3MinMax[1]])
+			.range([0, xSpaceForSingleChart]);
 
-			let current_y_scale = d3.scaleLinear()
-				.domain([d3MinMax[1], d3MinMax[0]])
-				.range([0, ySpaceForSingleChart])
-
-			x_scales.push(current_x_scale);
-			y_scales.push(current_y_scale);
+		let current_y_scale = d3.scaleLinear()
+			.domain([d3MinMax[1], d3MinMax[0]])
+			.range([0, ySpaceForSingleChart]);
+		
+		x_scales.push(current_x_scale);
+		y_scales.push(current_y_scale);
 	});
 }
 
@@ -59,7 +58,7 @@ function createScales() {
 */
 function useBlack(key) {
 	if (typeof non_numeric_keys.length !== "undefined") {
-		if (non_numeric_keys.indexOf(key) != -1 && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length) {
+		if (non_numeric_keys.includes(key) && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length) {
 			return true;
 		}
 	}
@@ -74,39 +73,36 @@ function plot(key = non_numeric_keys[0]) {
 
 	takeValues();
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
+	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	const svg = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
 	y_scales.forEach((element, i) => {
-		let beginning_y = padding + i * vertical_space + i * y_space_for_single_chart;
-		stampa("Asse y")
+		let beginning_y = padding + i * vertical_space + i * ySpaceForSingleChart;
 		x_scales.forEach((inner_element, j) => {
 			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart;
-			stampa("Asse x")
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
 				.call(y_axis[i])
 				.attr("class", "axis" + (j != 0 ? " no_tick" : ""));
 
 			svg.append("g")
-				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + y_space_for_single_chart) + ")")
+				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + ySpaceForSingleChart) + ")")
 				.call(x_axis[tags.length - j - 1])
 				.attr("class", "axis" + (i != (tags.length - 1) ? " no_tick" : ""));
 
-			array_dataset.forEach((element) => {
+			array_dataset.forEach((row) => {
 				let temp_coord = [];
-				temp_coord.push(element[j]);	// x
-				temp_coord.push(element[i]);	// y
+				temp_coord.push(row[j]);	// x
+				temp_coord.push(row[i]);	// y
 				coord.push(temp_coord);
 			});
 		});
 	});
-	stampa("FINE")
 
-	let aux = 0;
 	const boolForBlack = non_numeric_keys.length <= colors.length
 
+	let aux = 0;
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
@@ -124,11 +120,11 @@ function plot(key = non_numeric_keys[0]) {
 		const y = padding
 			+ y_scale(element[1])
 			+ y_scale_index * vertical_space
-			+ y_scale_index * y_space_for_single_chart;
+			+ y_scale_index * ySpaceForSingleChart;
 
 		let color;
 
-		if (boolForBlack && non_numeric_keys.indexOf(key) != -1) {
+		if (boolForBlack && non_numeric_keys.includes(key)) {
 			const dataset_index = aux - auxiliary_index * dataset.length;
 			const single_element = dataset[dataset_index];
 			const single_key_value = `${single_element[key]}`
@@ -153,9 +149,6 @@ function plot(key = non_numeric_keys[0]) {
 * TODO: implement coloring on dimension
 */
 function colorDimension(value, selectedIndex) {
-	console.log('value: ' + value);
-	console.log('selectedIndex: ' + selectedIndex);
-
 	for(key in dataset[0]){
 
 		if(key == value){
@@ -178,8 +171,6 @@ function colorDimension(value, selectedIndex) {
 				});
 
 				if(colors.length > non_numeric_values.length){
-
-					//console.log(array_dataset);
 					d3.select("svg").selectAll("circle").remove()
 					plot(key)
 				}
@@ -248,35 +239,19 @@ function checkDimensionNumber(obj, checked) {
 * Descrivere
 */
 function adaptScatterPlot(obj, checked) {
-	//stampa(obj);
-	//stampa(checked);
-	//stampa("prima");
-	//stampa(tags);
-	if(checkDimensionNumber(obj, checked)){
-		if(checked)
+	if (checkDimensionNumber(obj, checked)) {
+		if (checked) {
 			tags.push(obj.value);	
-		else
+		}else {
 			tags = tags.filter(nameDimension => nameDimension != obj.value);
-	}
-	//stampa("dopo");
-	//stampa(tags);
-	//createScales(); // ??
-	//createAxis("x"); // ??
-	//createAxis("y"); // ??
+		}
 
-	if (tags.length != 0) {
 		d3.select("svg").selectAll("*").remove();
 		x_scales = [];
 		y_scales = [];
 		x_axis = [];
 		y_axis = [];
 		run();
-	} else {
-		d3.select("svg").selectAll("*").remove();
-		x_scales = [];
-		y_scales = [];
-		x_axis = [];
-		y_axis = [];
 	}
 }
 
@@ -299,7 +274,7 @@ function drawScatterPlot(dataset) {
 		});
 
 		for (key in aux_data) {
-			if (valid_keys.indexOf(key) == -1 && isNaN(+(aux_data[element]))) {
+			if (!valid_keys.includes(key) && isNaN(+(aux_data[element]))) {
 				non_numeric_keys.push(key); // dimensioni NON numeriche
 			}
 		}
