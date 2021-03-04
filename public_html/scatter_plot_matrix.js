@@ -12,7 +12,7 @@ const max_dimensions = 5;
 const x_number_of_ticks = 2;
 const y_number_of_ticks = 2;
 const radius = 3;
-const colors = ["blue", "red", "green"];
+const colors = ["blue", "red", "green", "cyan", "purple", "brown", "violet", "grey", "yellow"];
 
 /*
 * Creazione assi x o y
@@ -70,8 +70,9 @@ function useBlack(key) {
 * Descrivere
 */
 function plot(key = non_numeric_keys[0]) {
-	let only_black = useBlack(key);
+	//let only_black = useBlack(key);
 
+	takeValues();
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
 	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	const svg = d3.select("svg");
@@ -104,6 +105,8 @@ function plot(key = non_numeric_keys[0]) {
 	stampa("FINE")
 
 	let aux = 0;
+	const boolForBlack = non_numeric_keys.length <= colors.length
+
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
@@ -125,7 +128,7 @@ function plot(key = non_numeric_keys[0]) {
 
 		let color;
 
-		if (non_numeric_keys.indexOf(key) != -1) {
+		if (boolForBlack && non_numeric_keys.indexOf(key) != -1) {
 			const dataset_index = aux - auxiliary_index * dataset.length;
 			const single_element = dataset[dataset_index];
 			const single_key_value = `${single_element[key]}`
@@ -141,7 +144,7 @@ function plot(key = non_numeric_keys[0]) {
 			.attr("cy", y)
 			.attr("r", radius)
 			.attr("class", "dot")
-			.attr("fill", only_black ? "black" : color);
+			.attr("fill", /*only_black ? "black" :*/ color);
 		aux++;
 	})
 }
@@ -152,7 +155,39 @@ function plot(key = non_numeric_keys[0]) {
 function colorDimension(value, selectedIndex) {
 	console.log('value: ' + value);
 	console.log('selectedIndex: ' + selectedIndex);
+
+	for(key in dataset[0]){
+
+		if(key == value){
+
+			let aux_data = dataset[0]
+			
+			if(!isNaN(parseFloat(`${aux_data[key]}`))){
+
+				alert("You have to select a non numeric key.");
+				//d3.selectAll('circle').attr('fill', 'black');
+			}else{
+
+				non_numeric_values = [];
+				dataset.forEach((element)=>{
+
+					if(non_numeric_values.indexOf(`${element[key]}`) == -1){
+
+						non_numeric_values.push(`${element[key]}`);
+					}
+				});
+
+				if(colors.length > non_numeric_values.length){
+
+					//console.log(array_dataset);
+					d3.select("svg").selectAll("circle").remove()
+					plot(key)
+				}
+			}
+		}
+	}
 }
+
 
 /*
 * Controlla se il dataset è vuoto
@@ -269,20 +304,7 @@ function drawScatterPlot(dataset) {
 			}
 		}
 
-		// A cosa serve questa?
-		let j = 0;
-		for (key in aux_data) {
-			let aux = [];
-			dataset.forEach(element => {
-				if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(element[key]) == -1)) {
-					aux.push(element[key]); // ??
-				}
-			})
-			j++;
-			if (aux.length != 0) {
-				non_numeric_values.push(aux);
-			}
-		}
+		takeValues();
 
 		valid_keys.forEach(key => {
 			if(tags.length < max_dimensions) {
