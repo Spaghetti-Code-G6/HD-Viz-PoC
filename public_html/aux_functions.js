@@ -13,7 +13,6 @@ function clearAll() {
 	tags = [];
 	x_axis = [];
 	y_axis = [];
-	indexes = [];
 	array_dataset = [];
 	valid_keys = [];
 	non_numeric_keys = [];
@@ -29,7 +28,7 @@ function convertDatasetToArray() {
 		let temp_array = [];
 		for (key in element) {
 			if (tags.indexOf(key) != -1) {
-				temp_array.push(parseFloat(`${element[key]}`));
+				temp_array.push(+(element[key]));
 			}
 		}
 		array_dataset.push(temp_array);
