@@ -7,6 +7,16 @@ function makeReadable(str) {
 	return aux;
 }
 
+
+/*Prende in input una stringa $str, rimuove tutti i caratteri _ e la ritona.
+l'ho scritta perchè non capisco lo scopo di str.key della makeReadable originale
+che però non cancello perchè qui sono la persona meno qualificata per farlo*/
+function makeReadableGlobal(str) {
+	let aux = str.replace(/_/g, " ");
+	aux = aux.charAt(0).toUpperCase() + aux.slice(1);
+	return aux;
+}
+
 function takeValues(){
 
 	let j = 0;
@@ -24,6 +34,7 @@ function takeValues(){
 			non_numeric_values.push(aux);
 		}
 	}
+
 }
 
 function clearAll() {
