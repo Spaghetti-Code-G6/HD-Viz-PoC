@@ -56,7 +56,7 @@ function plot(key = non_numeric_keys[0]) {
 	convertDatasetToArray();
 	let coord = [];
 
-	let label = valid_keys;
+	let label = tags;
 	let reverse_label = label.slice(0,5).reverse();
 	console.log(label);
 	console.log(reverse_label);
