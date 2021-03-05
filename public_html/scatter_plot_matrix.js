@@ -13,13 +13,13 @@ const x_number_of_ticks = 4;
 const y_number_of_ticks = 4;
 const radius = 4;
 const colors = d3.schemeSet1;
-const SPACE_FOR_LABELS = 60;
+const SPACE_FOR_LABELS = 0;
 
 const axisTextFormat = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
 
 function createScales() {
-	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
+	const xSpaceForSingleChart = (width - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
+	const ySpaceForSingleChart = (heigth - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	tags.forEach(dimensionName => {
 		let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
@@ -56,8 +56,8 @@ function createAxis(axis) {
 
 function plot(key = non_numeric_keys[0]) {
 	takeValues();
-	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
+	const xSpaceForSingleChart = (width - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
+	const ySpaceForSingleChart = (heigth - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	const svg = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
@@ -79,14 +79,18 @@ function plot(key = non_numeric_keys[0]) {
 
 				//etichette per l'asse y
 				svg.append("text")
-					.attr("transform", "translate(" + padding + ", " + (beginning_y+(0.5*ySpaceForSingleChart)) + ")")
+					.attr("transform", "translate(" + 20 + ", " + (beginning_y+(0.5*ySpaceForSingleChart)) + "),rotate(-90)")
 					.style("text-anchor", "middle")
+					.attr("fill", "#635F5D")
 					.text(makeReadableGlobal(tags[i].toString()));
 
 				//etichette per l'asse x
 				svg.append("text")
-					.attr("transform", "translate(" + (((tags.length+1)*xSpaceForSingleChart) - ((tags.length-i)*xSpaceForSingleChart)) + ", " + 0.75*padding + ")")
-					.style("text-anchor", "middle")
+					.attr("transform", "translate(" 
+					+ (((tags.length)*xSpaceForSingleChart) - ((tags.length-i)*xSpaceForSingleChart) + ySpaceForSingleChart) 
+					+ ", " + (`${heigth}`-20) + ")")
+					.style("text-anchor", "end")
+					.attr("fill", "#635F5D")
 					.text(makeReadableGlobal(reverse_label[i].toString()));
 
 			svg.append("g")
@@ -102,13 +106,6 @@ function plot(key = non_numeric_keys[0]) {
 			});
 
 		});
-
-		//etichette per l'asse x
-		/*let x_label=label[label.lenght - i];
-		svg.append("text")
-			.attr("transform", "translate(" + (3*padding+(i*xSpaceForSingleChart)) + ", " + 0.75*padding + ")")
-			.style("text-anchor", "middle")
-			.text(makeReadableGlobal(x_label));*/
 	});
 
 	const boolForBlack = non_numeric_keys.length <= colors.length

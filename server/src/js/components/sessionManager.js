@@ -39,7 +39,7 @@ let sessionStore = new (memoryStore(session))({
 /** I dati su req.session sono salati a lato server (sicuro) nel nostro sessionStore (credo).*/
 sessionRouter.use(session({
 
-    cookie: { maxAge: 30000 }, /* Età massima del cookie prima di perdere validità. */
+    cookie: { maxAge: 1800000 }, /* Età massima del cookie prima di perdere validità. */
     store: sessionStore,    /* Magazzino delle sessioni. */
 
     secret: 'Spaghetti',

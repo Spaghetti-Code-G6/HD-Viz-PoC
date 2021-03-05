@@ -1,14 +1,14 @@
 
 let dataset = [];
 
-const w = 1000;
-const h = 1000;
-const padding = 40;
+const width = 1000;
+const heigth = 1000;
+const padding = 60;
 const space_between_charts = 0;
 const vertical_space = 0;
 
 function main() {
- 	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", w).attr("height", h);
+ 	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", width).attr("height", heigth);
 	lastSession();
 }
 
