@@ -34,13 +34,14 @@ csvRouter.post('/file', async (req, res) =>{
                 firstLines[0] = firstLines[0].split(',');
                 firstLines[1] = firstLines[1].split(',');
 
-                let metaData = [];
+                let metaData = {};
                 for (let i = 0; i < firstLines[0].length; i++) {
-                    metaData[i] = {
-                        /** Entry di metadata per ogni campo di tipo del nostro file csv.*/
-                        header: firstLines[0][i], visibility: true, /* Nome campo, visibilità e tipo.*/
+
+                    metaData[firstLines[0][i]] = {
+                        visibility: true, /* Nome campo, visibilità e tipo.*/
                         type: !isNaN(+firstLines[1][i]) ? typeof +firstLines[1][i] : typeof firstLines[1][i],
                     }
+
                 }
                 /** Settaggio corretto della sessione corrente.*/
                 setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);

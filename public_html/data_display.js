@@ -17,13 +17,22 @@ function main() {
  * 	però funziona.*/
 function lastSession(){
 
-	fetch('prevSession', {method : 'GET'})
-		.then(res => res.json())
-		.then(res =>{
-			dataset = [];
-			if(res.hdConfig === 'csv')
-				d3.csv(res.hdFilePath, data => dataset.push(data))
-					.then(() => drawScatterPlot(dataset))});
+	const formData = new FormData();
+	formData.append('coso', 'APPA');
+
+	fetch('/selected', {
+		method : 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ selectedConfig: 0 })
+	})
+
+	.then(res => res.json())
+	.then(res =>{
+		dataset = [];
+	/*	if(res.hdConfig === 'csv')
+			d3.csv(res.hdFilePath, data => dataset.push(data))
+				.then(() => drawScatterPlot(dataset))});*/
+		drawScatterPlot(res.data);})
 
 }
 

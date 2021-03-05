@@ -3,6 +3,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "fs": "^0.0.1-security",
+    "mariadb": "^2.5.3",
     "memorystore": "^1.6.5"
   },
   "type": "module",

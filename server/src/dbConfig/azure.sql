@@ -1,1 +1,1 @@
-select * from tabella;
+SELECT  * FROM Specie;
