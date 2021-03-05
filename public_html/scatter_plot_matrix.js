@@ -64,8 +64,6 @@ function plot(key = non_numeric_keys[0]) {
 
 	let label = tags;
 	let reverse_label = label.slice(0,5).reverse();
-	console.log(label);
-	console.log(reverse_label);
 
 	y_scales.forEach((element, i) => {
 		let beginning_y = padding + i * vertical_space + i * ySpaceForSingleChart;
@@ -114,23 +112,36 @@ function plot(key = non_numeric_keys[0]) {
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
-		//console.log(x_scale_index)
 		const y_scale_index = Math.floor(auxiliary_index / tags.length);
+		
 		const x_scale = x_scales[x_scale_index];
 		const y_scale = y_scales[y_scale_index];
+		
 
 		const x = padding
 			+ x_scale(element[0])
 			+ (tags.length - 1) * space_between_charts
 			+ (tags.length - 1) * xSpaceForSingleChart
 			- x_scale_index * space_between_charts
-			- x_scale_index * xSpaceForSingleChart
-			+SPACE_FOR_LABELS;
+			- x_scale_index * xSpaceForSingleChart;
 
 		const y = padding
 			+ y_scale(element[1])
 			+ y_scale_index * vertical_space
 			+ y_scale_index * ySpaceForSingleChart;
+
+			// TODO: RISOLVERE BUG x negative
+			if(x<0) {
+				console.log("aux: "+aux)
+				console.log("dataset.length: "+dataset.length)
+				console.log("floor: "+ Math.floor(aux / dataset.length))
+				console.log("tags.length: "+tags.length)
+				console.log("auxiliary_index: "+auxiliary_index)
+				console.log("x_scale_index: "+x_scale_index)
+				console.log("x_scales[x_scale_index]: "+x_scales[x_scale_index])
+				console.log("x_scales: "+y_scales[y_scale_index])
+				console.log("x: "+x)
+			}
 
 		let color;
 
@@ -144,8 +155,6 @@ function plot(key = non_numeric_keys[0]) {
 		} else {
 			color = "black";
 		}
-
-		//console.log(x);
 
 		svg.append("circle")
 			.attr("cx", x)
