@@ -71,7 +71,6 @@ function read(limit, path){
 
         readStream.on("close", () => resolve(readLines)); /** Restituisce il valore di promessa*/
         readStream.on("error", error => reject(error)); /** Manda errore, da gestire.*/
-
     }));
 }
 
