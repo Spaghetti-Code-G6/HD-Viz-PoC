@@ -1,31 +1,27 @@
 let x_scales = [];
 let y_scales = [];
-let tags = [];
-const max_dimensions = 5;
-let indexes = [];
 let x_axis = [];
 let y_axis = [];
+
+let tags = []; // actually printed dimensions
+let valid_keys = []; // all numeric dimensions
+let non_numeric_keys = []; // all Not numeric dimensions
+let non_numeric_values = [];
+
+const max_dimensions = 5;
 const x_number_of_ticks = 2;
 const y_number_of_ticks = 2;
-let valid_keys = [];
-let non_numeric_keys = [];
-let non_numeric_values = [];
-const radius = 3;
-const colors = ["navy", "purple", "red", "yellow", "green"];
-const SPACE_FOR_LABELS = 60;
 
-//const colors = ["aqua", "blue", "fuchsia", "gray", "green", "lime", "maroon", "navy", "olive", "purple", "red",
-// "silver", "teal", "yellow"]
-/*
-* Creazione assi x o y
-*/
+const radius = 2;
+const colors = ["blue", "red", "green", "pink", "yellow", "black", "grey", "orange", "purple"];
+const SPACE_FOR_LABELS = 60;
 function createAxis(axis) {
 	if (axis == "x") {
-		x_scales.forEach((element) => {
+		x_scales.forEach(element => {
 			x_axis.push(d3.axisBottom(element).ticks(x_number_of_ticks))
 		});
 	} else if (axis == "y") {
-		y_scales.forEach((element) => {
+		y_scales.forEach(element => {
 			y_axis.push(d3.axisLeft(element).ticks(y_number_of_ticks))
 		});
 	} else {
@@ -33,52 +29,29 @@ function createAxis(axis) {
 	}
 }
 
-/*
-* Crea e plotta le scale
-*/
 function createScales() {
-	let datas = dataset[0];
-	let values = Object.values(datas);
-
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
 	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
-
 	tags.forEach((dimensionName, j) => {
-			let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
+		let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
-			let current_x_scale = d3.scaleLinear()
-				.domain([d3MinMax[0], d3MinMax[1]])
-				.range([0, xSpaceForSingleChart])
+		let current_x_scale = d3.scaleLinear()
+			.domain([d3MinMax[0], d3MinMax[1]])
+			.range([0, xSpaceForSingleChart]);
 
-			let current_y_scale = d3.scaleLinear()
-				.domain([d3MinMax[1], d3MinMax[0]])
-				.range([0, ySpaceForSingleChart])
+		let current_y_scale = d3.scaleLinear()
+			.domain([d3MinMax[1], d3MinMax[0]])
+			.range([0, ySpaceForSingleChart]);
 
-			x_scales.push(current_x_scale);
-			y_scales.push(current_y_scale);
+		x_scales.push(current_x_scale);
+		y_scales.push(current_y_scale);
 	});
 }
 
-/*
-* Controlla se i colori a disposizione bastano per rappresentare i valori
-*/
-function useBlack(key) {
-	if (typeof non_numeric_keys.length !== "undefined") {
-		if (non_numeric_keys.indexOf(key) != -1 && non_numeric_values[non_numeric_keys.indexOf(key)].length > colors.length) {
-			return true;
-		}
-	}
-	return false;
-}
-
-/*
-* Descrivere
-*/
 function plot(key = non_numeric_keys[0]) {
-	let only_black = useBlack(key);
-
+	takeValues();
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const y_space_for_single_chart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
+	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
 	const svg = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
@@ -89,8 +62,7 @@ function plot(key = non_numeric_keys[0]) {
 	console.log(reverse_label);
 
 	y_scales.forEach((element, i) => {
-		let beginning_y = padding + i * vertical_space + i * y_space_for_single_chart;
-
+		let beginning_y = padding + i * vertical_space + i * ySpaceForSingleChart;
 		x_scales.forEach((inner_element, j) => {
 			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart+SPACE_FOR_LABELS;
 
@@ -101,9 +73,9 @@ function plot(key = non_numeric_keys[0]) {
 
 				//etichette per l'asse y
 				svg.append("text")
-					.attr("transform", "translate(" + padding + ", " + (beginning_y+(0.5*y_space_for_single_chart)) + ")")
+					.attr("transform", "translate(" + padding + ", " + (beginning_y+(0.5*ySpaceForSingleChart)) + ")")
 					.style("text-anchor", "middle")
-					.text(makeReadableGlobal(label[i].toString()));
+					.text(makeReadableGlobal(tags[i].toString()));
 
 				//etichette per l'asse x
 				svg.append("text")
@@ -112,15 +84,14 @@ function plot(key = non_numeric_keys[0]) {
 					.text(makeReadableGlobal(reverse_label[i].toString()));
 
 			svg.append("g")
-				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
+				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + ySpaceForSingleChart) + ")")
 				.call(x_axis[tags.length - j - 1])
 				.attr("class", "axis" + (i != (tags.length - 1) ? " no_tick" : ""));
 
-
-			array_dataset.forEach((element) => {
+			array_dataset.forEach((row) => {
 				let temp_coord = [];
-				temp_coord.push(element[j]);	// x
-				temp_coord.push(element[i]);	// y
+				temp_coord.push(row[j]);	// x
+				temp_coord.push(row[i]);	// y
 				coord.push(temp_coord);
 			});
 
@@ -134,8 +105,9 @@ function plot(key = non_numeric_keys[0]) {
 			.text(makeReadableGlobal(x_label));*/
 	});
 
-	let aux = 0;
+	const boolForBlack = non_numeric_keys.length <= colors.length
 
+	let aux = 0;
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
@@ -154,11 +126,11 @@ function plot(key = non_numeric_keys[0]) {
 		const y = padding
 			+ y_scale(element[1])
 			+ y_scale_index * vertical_space
-			+ y_scale_index * y_space_for_single_chart;
+			+ y_scale_index * ySpaceForSingleChart;
 
 		let color;
 
-		if (non_numeric_keys.indexOf(key) != -1) {
+		if (boolForBlack && non_numeric_keys.includes(key)) {
 			const dataset_index = aux - auxiliary_index * dataset.length;
 			const single_element = dataset[dataset_index];
 			const single_key_value = `${single_element[key]}`
@@ -174,49 +146,33 @@ function plot(key = non_numeric_keys[0]) {
 			.attr("cy", y)
 			.attr("r", radius)
 			.attr("class", "dot")
-			.attr("fill", only_black ? "black" : color);
+			.attr("fill", color);
 		aux++;
 	})
 }
 
-/*
-* Controlla che il numero di dimensioni selezionate non superi il limite
-*/
-function checkDimensionNumber(obj, checked) {
-	let number_of_checked = 0;
-	let checked_values = [];
-
-	if(checked){
-		let div_element = document.getElementById("dimensionSelection");
-		let childs = div_element.childNodes;
-		childs.forEach((element) => {
-			if(element.nodeName == "INPUT" && element.checked) {
-				number_of_checked++;
+function colorDimension(value, selectedIndex) {
+	for (key in dataset[0]) {
+		if (key == value) {
+			let aux_data = dataset[0]
+			if (!isNaN(parseFloat(`${aux_data[key]}`))) {
+				alert("You have to select a non numeric key.");
+			} else {
+				non_numeric_values = [];
+				dataset.forEach((element) => {
+					if (non_numeric_values.indexOf(`${element[key]}`) == -1) {
+						non_numeric_values.push(`${element[key]}`);
+					}
+				});
+				if (colors.length > non_numeric_values.length) {
+					d3.select("svg").selectAll("circle").remove()
+					plot(key)
+				}
 			}
-		});
-		if(number_of_checked > max_dimensions) {
-			obj.checked = false;
-			alert("Reached max dimensions")
 		}
 	}
 }
 
-/*
-* Descrivere
-*/
-function adaptScatterPlot(obj, checked) {
-	checkDimensionNumber(obj, checked);
-
-}
-
-function colorDimension(value, selectedIndex) {
-	console.log('value: ' + value);
-	console.log('selectedIndex: ' + selectedIndex);
-}
-
-/*
-* Controlla se il dataset è vuoto
-*/
 function isDatasetEmpty(dataset) {
 	if (dataset.length == 0) {
 		alert("Dataset empty");
@@ -225,17 +181,6 @@ function isDatasetEmpty(dataset) {
 	return false;
 }
 
-/*
-* Crea nel HTML le dimensioni contenute nel aux_data
-*/
-function injectDimensionsInHTML(element, aux_data) {
-
-
-}
-
-/*
-* Crea nel HTML la select per le dimensioni non numeriche
-*/
 function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += "<br/>"
 	element.innerHTML += "<label for='color_selection'>(Non funziona) Colora una dimensione: </label>"
@@ -247,14 +192,43 @@ function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += "</select>"
 }
 
-function stampa(questo) {
+function checkDimensionNumber(obj, checked) {
+	let number_of_checked = 0;
 
-	console.log(questo);
+	if (checked) {
+		let div_element = document.getElementById("dimensionSelection");
+		let childs = div_element.childNodes;
+		childs.forEach((element) => {
+			if (element.nodeName == "INPUT" && element.checked) {
+				number_of_checked++;
+			}
+		});
+		if (number_of_checked > max_dimensions) {
+			obj.checked = false;
+			alert("Reached max dimensions");
+			return false;
+		}
+	}
+	return true;
 }
 
-/*
-* Descrivere
-*/
+function adaptScatterPlot(obj, checked) {
+	if (checkDimensionNumber(obj, checked)) {
+		if (checked) {
+			tags.push(obj.value);
+		} else {
+			tags = tags.filter(nameDimension => nameDimension != obj.value);
+		}
+
+		d3.select("svg").selectAll("*").remove();
+		x_scales = [];
+		y_scales = [];
+		x_axis = [];
+		y_axis = [];
+		run();
+	}
+}
+
 function drawScatterPlot(dataset) {
 	if (!isDatasetEmpty(dataset)) {
 		let start = performance.now()
@@ -262,39 +236,27 @@ function drawScatterPlot(dataset) {
 
 		const element = document.getElementById("dimensionSelection");
 		const aux_data = dataset[0];
-		const keys = Object.keys(aux_data); // nome di ogni dimensione
+		const keys = Object.keys(aux_data);
 
 		keys.forEach(element => {
 			if (!isNaN(+(aux_data[element]))) {
-				valid_keys.push(element); // dimensioni numeriche
+				valid_keys.push(element);
 			}
 		});
 
 		for (key in aux_data) {
-			if (valid_keys.indexOf(key) == -1 && isNaN(+(aux_data[element]))) {
-				non_numeric_keys.push(key); // dimensioni NON numeriche
+			if (!valid_keys.includes(key) && isNaN(+(aux_data[element]))) {
+				non_numeric_keys.push(key);
 			}
 		}
 
-		let j = 0;
-		for (key in aux_data) {
-			let aux = [];
-			dataset.forEach(element => {
-				if ((valid_keys.indexOf(key) == -1) && (aux.indexOf(element[key]) == -1)) {
-					aux.push(element[key]); // ??
-				}
-			})
-			j++;
-			if (aux.length != 0) {
-				non_numeric_values.push(aux);
-			}
-		}
+		takeValues();
 
 		valid_keys.forEach(key => {
-			if(tags.length < max_dimensions) {
-				tags.push(key); // tags used for print
+			if (tags.length < max_dimensions) {
+				tags.push(key); // printed dimensions
 			}
-			element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({key}) + `</label>`;
+			element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({ key }) + `</label>`;
 			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}'`
 				+ ((tags.includes(key)) ? "checked" : "")
 				+ ` onchange = 'adaptScatterPlot(this, checked)' value = '${key}' />`;
@@ -309,18 +271,18 @@ function drawScatterPlot(dataset) {
 		run();
 
 		let end = performance.now();
-		console.log(`Execution time: ${end - start}ms`);
+		console.log(`Execution time: ${((end - start) / 1000).toFixed(2)} seconds`);
+	} else {
+		alert("dataset empty!!!")
 	}
 }
 
+// TODO: link checkbox and color selection to this button
 function updatePlot() {
 	console.log("updatePlot pressed");
 	console.log("valid_keys: " + valid_keys);
 }
 
-/*
-* Crea scale, assi e plotta
-*/
 function run() {
 	createScales(); // ??
 	createAxis("x"); // ??

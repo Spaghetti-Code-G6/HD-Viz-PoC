@@ -1,16 +1,30 @@
+
 let dataset = [];
 
-const w = 1080;
-const h = 720;
+const w = 1000;
+const h = 1000;
 const padding = 65;
 const space_between_charts = 0;
 const vertical_space = 0;
 
 function main() {
-	const svg = d3.select("#scatter_plot_content")
-		.append("svg")
-		.attr("width", w)
-		.attr("height", h);
+ 	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", w).attr("height", h);
+	lastSession();
+}
+
+
+/** Prende i dati della scorsa operazione fatta su HdViz (molto prototipo al momento in quanto sarà più grosso)
+ * 	però funziona.*/
+function lastSession(){
+
+	fetch('prevSession', {method : 'GET'})
+		.then(res => res.json())
+		.then(res =>{
+			dataset = [];
+			if(res.hdConfig === 'csv')
+				d3.csv(res.hdFilePath, data => dataset.push(data))
+					.then(() => drawScatterPlot(dataset))});
+
 }
 
 function sendData() {
@@ -27,6 +41,7 @@ function sendData() {
 		.then(response => response.json())
 		.then(json => {
 			dataset = [];
+			console.log(json.url)
 			d3.csv(json.url, (data) => {
 				dataset.push(data);
 			})
