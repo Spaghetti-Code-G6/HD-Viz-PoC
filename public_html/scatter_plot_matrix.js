@@ -13,6 +13,7 @@ const x_number_of_ticks = 4;
 const y_number_of_ticks = 4;
 const radius = 4;
 const colors = d3.schemeSet1;
+const SPACE_FOR_LABELS = 60;
 
 const axisTextFormat = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
 
@@ -60,14 +61,33 @@ function plot(key = non_numeric_keys[0]) {
 	const svg = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
+
+	let label = tags;
+	let reverse_label = label.slice(0,5).reverse();
+	console.log(label);
+	console.log(reverse_label);
+
 	y_scales.forEach((element, i) => {
 		let beginning_y = padding + i * vertical_space + i * ySpaceForSingleChart;
 		x_scales.forEach((inner_element, j) => {
-			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart;
+			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart+SPACE_FOR_LABELS;
+
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
 				.call(y_axis[i])
 				.attr("class", "axis" + (j != 0 ? " no_tick" : ""));
+
+				//etichette per l'asse y
+				svg.append("text")
+					.attr("transform", "translate(" + padding + ", " + (beginning_y+(0.5*ySpaceForSingleChart)) + ")")
+					.style("text-anchor", "middle")
+					.text(makeReadableGlobal(tags[i].toString()));
+
+				//etichette per l'asse x
+				svg.append("text")
+					.attr("transform", "translate(" + (((tags.length+1)*xSpaceForSingleChart) - ((tags.length-i)*xSpaceForSingleChart)) + ", " + 0.75*padding + ")")
+					.style("text-anchor", "middle")
+					.text(makeReadableGlobal(reverse_label[i].toString()));
 
 			svg.append("g")
 				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + ySpaceForSingleChart) + ")")
@@ -80,7 +100,15 @@ function plot(key = non_numeric_keys[0]) {
 				temp_coord.push(row[i]);	// y
 				coord.push(temp_coord);
 			});
+
 		});
+
+		//etichette per l'asse x
+		/*let x_label=label[label.lenght - i];
+		svg.append("text")
+			.attr("transform", "translate(" + (3*padding+(i*xSpaceForSingleChart)) + ", " + 0.75*padding + ")")
+			.style("text-anchor", "middle")
+			.text(makeReadableGlobal(x_label));*/
 	});
 
 	const boolForBlack = non_numeric_keys.length <= colors.length
@@ -99,7 +127,8 @@ function plot(key = non_numeric_keys[0]) {
 			+ (tags.length - 1) * space_between_charts
 			+ (tags.length - 1) * xSpaceForSingleChart
 			- x_scale_index * space_between_charts
-			- x_scale_index * xSpaceForSingleChart;
+			- x_scale_index * xSpaceForSingleChart
+			+SPACE_FOR_LABELS;
 
 		const y = padding
 			+ y_scale(element[1])
