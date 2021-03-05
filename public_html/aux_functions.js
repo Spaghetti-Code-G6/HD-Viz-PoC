@@ -58,7 +58,7 @@ function convertDatasetToArray() {
 		let temp_array = [];
 		for (key in element) {
 			if (tags.includes(key)) {
-				temp_array.push(+(element[key]));
+				temp_array[tags.indexOf(key)] = (+(element[key]));
 			}
 		}
 		array_dataset.push(temp_array);

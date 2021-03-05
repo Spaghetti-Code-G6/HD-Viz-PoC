@@ -130,19 +130,6 @@ function plot(key = non_numeric_keys[0]) {
 			+ y_scale_index * vertical_space
 			+ y_scale_index * ySpaceForSingleChart;
 
-			// TODO: RISOLVERE BUG x negative
-			if(x<0) {
-				console.log("aux: "+aux)
-				console.log("dataset.length: "+dataset.length)
-				console.log("floor: "+ Math.floor(aux / dataset.length))
-				console.log("tags.length: "+tags.length)
-				console.log("auxiliary_index: "+auxiliary_index)
-				console.log("x_scale_index: "+x_scale_index)
-				console.log("x_scales[x_scale_index]: "+x_scales[x_scale_index])
-				console.log("x_scales: "+y_scales[y_scale_index])
-				console.log("x: "+x)
-			}
-
 		let color;
 
 		if (boolForBlack && non_numeric_keys.includes(key)) {
