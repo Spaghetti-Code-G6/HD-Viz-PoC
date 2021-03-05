@@ -3,7 +3,7 @@ let dataset = [];
 
 const w = 1000;
 const h = 1000;
-const padding = 65;
+const padding = 40;
 const space_between_charts = 0;
 const vertical_space = 0;
 

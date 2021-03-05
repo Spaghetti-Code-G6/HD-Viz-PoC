@@ -34,19 +34,12 @@ svg {
   margin: auto;
 }
 
-.axis {
-  stroke: black;
-  stroke-width: 0.7;
-}
-
-.tick {
-  stroke: black;
-  fill: black;
+.tick line{
+  stroke: #c0c0bb;
 }
 
 .tick text {
-  stroke: none;
-  color: black;
+  fill: #635f5d;
 }
 
 .no_tick text {
@@ -54,8 +47,7 @@ svg {
 }
 
 .axis path {
-  stroke: black;
-  fill: none;
+  stroke: #c0c0bb;
 }
 
 #titolo h1 {

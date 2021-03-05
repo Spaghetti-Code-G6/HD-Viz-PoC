@@ -9,29 +9,17 @@ let non_numeric_keys = []; // all Not numeric dimensions
 let non_numeric_values = [];
 
 const max_dimensions = 5;
-const x_number_of_ticks = 2;
-const y_number_of_ticks = 2;
-const radius = 2;
-const colors = ["blue", "red", "green", "pink", "yellow", "black", "grey", "orange", "purple"];
+const x_number_of_ticks = 4;
+const y_number_of_ticks = 4;
+const radius = 4;
+const colors = d3.schemeSet1;
 
-function createAxis(axis) {
-	if (axis == "x") {
-		x_scales.forEach(element => {
-			x_axis.push(d3.axisBottom(element).ticks(x_number_of_ticks))
-		});
-	} else if (axis == "y") {
-		y_scales.forEach(element => {
-			y_axis.push(d3.axisLeft(element).ticks(y_number_of_ticks))
-		});
-	} else {
-		alert("Wrong parameter in creation of axis");
-	}
-}
+const axisTextFormat = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
 
 function createScales() {
 	const xSpaceForSingleChart = (w - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
 	const ySpaceForSingleChart = (h - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
-	tags.forEach((dimensionName, j) => {
+	tags.forEach(dimensionName => {
 		let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
 		let current_x_scale = d3.scaleLinear()
@@ -45,6 +33,24 @@ function createScales() {
 		x_scales.push(current_x_scale);
 		y_scales.push(current_y_scale);
 	});
+}
+
+function createAxis(axis) {
+	if (axis == "x") {
+		x_scales.forEach(element => {
+			x_axis.push(d3.axisBottom(element)
+			.ticks(x_number_of_ticks)
+			.tickFormat(axisTextFormat))
+		});
+	} else if (axis == "y") {
+		y_scales.forEach(element => {
+			y_axis.push(d3.axisLeft(element)
+			.ticks(y_number_of_ticks)
+			.tickFormat(axisTextFormat))
+		});
+	} else {
+		alert("Wrong parameter in creation of axis");
+	}
 }
 
 function plot(key = non_numeric_keys[0]) {
@@ -83,6 +89,7 @@ function plot(key = non_numeric_keys[0]) {
 	coord.forEach((element) => {
 		const auxiliary_index = Math.floor(aux / dataset.length);
 		const x_scale_index = auxiliary_index % tags.length;
+		//console.log(x_scale_index)
 		const y_scale_index = Math.floor(auxiliary_index / tags.length);
 		const x_scale = x_scales[x_scale_index];
 		const y_scale = y_scales[y_scale_index];
@@ -112,12 +119,22 @@ function plot(key = non_numeric_keys[0]) {
 			color = "black";
 		}
 
+		//console.log(x);
+
 		svg.append("circle")
 			.attr("cx", x)
 			.attr("cy", y)
 			.attr("r", radius)
 			.attr("class", "dot")
-			.attr("fill", color);
+			.attr("fill", color)
+			.attr("opacity", .4)
+		.append("svg:title")
+			.text("("
+				+(x_scale(element[0]))
+				+";"
+				+(y_scale(element[1]))
+				+")");
+		
 		aux++;
 	})
 }
@@ -196,6 +213,9 @@ function adaptScatterPlot(obj, checked) {
 		y_scales = [];
 		x_axis = [];
 		y_axis = [];
+		x_scales = [];
+		y_scales = [];
+		
 		run();
 	}
 }
@@ -259,4 +279,4 @@ function run() {
 	createAxis("x"); // ??
 	createAxis("y"); // ??
 	plot();
-}
+} 
