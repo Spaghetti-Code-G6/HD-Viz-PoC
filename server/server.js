@@ -12,7 +12,7 @@ let hdViz = express()
 const PORT = 8085; /** Porta alla quale il server fa ascolto.*/
 
 /** Percorsi accessibili staticamente.*/
-hdViz.use('/', express.static( 'public_html'))
+hdViz.use('/', express.static('public_html'))
 hdViz.use('/server/csv/tmp', express.static('server/csv/tmp'))
 
 
@@ -40,7 +40,7 @@ hdViz.use('/prevSession', ((req, res) => {
 
 
 hdViz.listen(PORT); /* Siamo in ascolto di richieste HTTP. */
-export default  hdViz;
+export default hdViz;
 
 
 // Dati : Categorico Ordinale Intervallo Ratio (ha 0)

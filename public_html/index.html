@@ -2,80 +2,80 @@
 <html>
 
 <head>
-	<title>PoC - HD-Viz</title>
+    <title>PoC - HD-Viz</title>
 
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script type="text/javascript" src="aux_for_samuel.js"></script>
-	<script type="text/javascript" src="d3.v6.min.js"></script>
-	<script type="text/javascript" src="data_display.js"></script>
-	<script type="text/javascript" src="scatter_plot_matrix.js"></script>
-	<script type="text/javascript" src="aux_functions.js"></script>
-	<script type="text/javascript" src="db_connection.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <script src="aux_for_samuel.js" type="text/javascript"></script>
+    <script src="d3.v6.min.js" type="text/javascript"></script>
+    <script src="data_display.js" type="text/javascript"></script>
+    <script src="scatter_plot_matrix.js" type="text/javascript"></script>
+    <script src="aux_functions.js" type="text/javascript"></script>
+    <script src="db_connection.js" type="text/javascript"></script>
 
-	<script type="text/javascript" src="jquery.tabshort.js"></script>
-	<link
-      href="https://fonts.googleapis.com/css?family=Poppins&display=swap"
-      rel="stylesheet"
+    <script src="jquery.tabshort.js" type="text/javascript"></script>
+    <link
+            href="https://fonts.googleapis.com/css?family=Poppins&display=swap"
+            rel="stylesheet"
     />
 </head>
 <body onload="main()">
-	
-	<h1>HD - Viz</h1>
-	
-	<div id="form-inserimento">
-		<span class="menu-label">Carica file</span>
-		<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
-			<input id="csvFile" type="file" name="csvFile" />
-			<input type="button" value='Carica' onclick="sendData()" />
-		</form>
-	</div>
-	
-	<div>
-		<form id="dbForm">
-			<!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
-		</form>
-	</div>
 
-	<div id="tab-menu" class="tab">
-		<button class="tablinks active" onclick="openPage(event, 'ScatterPlot')">Scatter Plot Matrix</button>
-		<button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>
-		<button class="tablinks" onclick="openPage(event, 'HeatMap')">Heat Map</button>
-		<button class="tablinks" onclick="openPage(event, 'DistanceMap')">Distance Map</button>
-		<button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Proiezione Lineare</button>
-	</div>
+<h1>HD - Viz</h1>
 
-	<div id="ScatterPlot" class="tabcontent">
-		<h2>Scatter plot</h2>
-		<div id="tooltip"></div>
-		<div id='scatter_plot_content'></div>
-		<div id="dimensionSelection"><h2>MENU</h2></div>
-	</div>
+<div id="form-inserimento">
+    <span class="menu-label">Carica file</span>
+    <form action='/file' encType="multipart/form-data" id='uploadForm' method='post' ref='uploadForm'>
+        <input id="csvFile" name="csvFile" type="file"/>
+        <input onclick="sendData()" type="button" value='Carica'/>
+    </form>
+</div>
 
-	<div id="ForceField" class="tabcontent">
-		<h2>Force Field</h2>
-		<p>Coming soon...</p>
-	</div>
+<div>
+    <form id="dbForm">
+        <!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
+    </form>
+</div>
 
-	<div id="HeatMap" class="tabcontent">
-		<h2>Heat Map</h2>
-		<p>Coming soon...</p>
-	</div>
+<div class="tab" id="tab-menu">
+    <button class="tablinks active" onclick="openPage(event, 'ScatterPlot')">Scatter Plot Matrix</button>
+    <button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>
+    <button class="tablinks" onclick="openPage(event, 'HeatMap')">Heat Map</button>
+    <button class="tablinks" onclick="openPage(event, 'DistanceMap')">Distance Map</button>
+    <button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Proiezione Lineare</button>
+</div>
 
-	<div id="DistanceMap" class="tabcontent">
-		<h2>Distance Map</h2>
-		<p>Coming soon...</p>
-	</div>
+<div class="tabcontent" id="ScatterPlot">
+    <h2>Scatter plot</h2>
+    <div id="tooltip"></div>
+    <div id='scatter_plot_content'></div>
+    <div id="dimensionSelection"><h2>MENU</h2></div>
+</div>
 
-	<div id="ProiezioneLineare" class="tabcontent">
-		<h2>Proiezione Lineare Multiasse</h2>
-		<p>Coming soon...</p>
-	</div>
+<div class="tabcontent" id="ForceField">
+    <h2>Force Field</h2>
+    <p>Coming soon...</p>
+</div>
 
-	<script>
-		
-	</script>
+<div class="tabcontent" id="HeatMap">
+    <h2>Heat Map</h2>
+    <p>Coming soon...</p>
+</div>
+
+<div class="tabcontent" id="DistanceMap">
+    <h2>Distance Map</h2>
+    <p>Coming soon...</p>
+</div>
+
+<div class="tabcontent" id="ProiezioneLineare">
+    <h2>Proiezione Lineare Multiasse</h2>
+    <p>Coming soon...</p>
+</div>
+
+<script>
+
+</script>
 </body>
 </html>
