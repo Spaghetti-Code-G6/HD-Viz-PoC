@@ -1,8 +1,8 @@
 
 let dataset = [];
 
-const width = 1000;
-const heigth = 1000;
+const width = 1100;
+const heigth = 1100;
 const padding = 60;
 const space_between_charts = 0;
 const vertical_space = 0;
