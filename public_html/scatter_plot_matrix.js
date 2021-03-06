@@ -144,9 +144,6 @@ function plot(key = non_numeric_keys[0]) {
 		}
 		
 		let toString = objToString(dataset[aux%dataset.length]);
-		// dataset[aux].forEach( (element, index) => {
-		// 	toString += tags[index] + ": 1" + "; ";
-		// })
 
 		svg.append("circle")
 			.attr("cx", x)
@@ -171,7 +168,7 @@ function objToString (obj) {
     }
     return str;
 }
-function colorDimension(value, selectedIndex) {
+function colorDimension(value) {
 	for (key in dataset[0]) {
 		if (key == value) {
 			let aux_data = dataset[0]
@@ -203,7 +200,8 @@ function isDatasetEmpty(dataset) {
 
 function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += `
-		<span>Colora una dimensione:</span>
+		<hr>
+		<span class="menu-label">Colora una dimensione:</span>
 		<div class="custom-select" style="width:200px; height:50px">
 			<select id="color_selection" onchange='colorDimension(value, selectedIndex)'>`;
 	const select = document.getElementById("color_selection");
@@ -213,6 +211,8 @@ function injectSelectionInHTML(element, non_numeric_keys) {
 	element.innerHTML += `
 			</select>
 		</div>`;
+	
+	customSelectMenu();
 }
 
 function checkDimensionNumber(obj, checked) {
@@ -271,14 +271,19 @@ function drawScatterPlot(dataset) {
 
 		takeValues();
 
+		element.innerHTML += `<h2>MENU</h2>
+		<hr>
+		<span class="menu-label">Dimensioni stampate:</span>`
 		valid_keys.forEach(key => {
 			if (tags.length < max_dimensions) {
 				tags.push(key); // printed dimensions
 			}
-			element.innerHTML += `<label class="checkbox-container" for='${key}'> ` + makeReadable({ key })
-								+ `<input id='${key}' type='checkbox' name='${key}'`
-								+ ((tags.includes(key)) ? "checked" : "")
-								+ ` onchange = 'adaptScatterPlot(this, checked)' value='${key}' /><span class="checkmark"></span></label>`;
+			element.innerHTML += `
+				<label class="checkbox-container" for='${key}'> ` + makeReadable({ key })
+					+ `<input id='${key}' type='checkbox' name='${key}'` + ((tags.includes(key)) ? "checked" : "")
+					+ ` onchange = 'adaptScatterPlot(this, checked)' value='${key}'/>
+					<span class="checkmark"></span>
+				</label>`;
 		});
 
 		injectSelectionInHTML(element, non_numeric_keys);
@@ -298,3 +303,86 @@ function run() {
 	createAxis("y"); // ??
 	plot();
 } 
+
+// custom select menu from w3c
+function customSelectMenu() {
+	var x, i, j, l, ll, selElmnt, a, b, c;
+		/*look for any elements with the class "custom-select":*/
+		x = document.getElementsByClassName("custom-select");
+		l = x.length;
+		for (i = 0; i < l; i++) {
+		  selElmnt = x[i].getElementsByTagName("select")[0];
+		  ll = selElmnt.length;
+		  /*for each element, create a new DIV that will act as the selected item:*/
+		  a = document.createElement("DIV");
+		  a.setAttribute("class", "select-selected");
+		  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+		  x[i].appendChild(a);
+		  /*for each element, create a new DIV that will contain the option list:*/
+		  b = document.createElement("DIV");
+		  b.setAttribute("class", "select-items select-hide");
+		  for (j = 1; j < ll; j++) {
+			/*for each option in the original select element,
+			create a new DIV that will act as an option item:*/
+			c = document.createElement("DIV");
+			c.innerHTML = selElmnt.options[j].innerHTML;
+			c.addEventListener("click", function(e) {
+				/*when an item is clicked, update the original select box,
+				and the selected item:*/
+				var y, i, k, s, h, sl, yl;
+				s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+				sl = s.length;
+				h = this.parentNode.previousSibling;
+				for (i = 0; i < sl; i++) {
+				  if (s.options[i].innerHTML == this.innerHTML) {
+					s.selectedIndex = i;
+					h.innerHTML = this.innerHTML;
+					y = this.parentNode.getElementsByClassName("same-as-selected");
+					yl = y.length;
+					for (k = 0; k < yl; k++) {
+					  y[k].removeAttribute("class");
+					}
+					this.setAttribute("class", "same-as-selected");
+					this.setAttribute("onchange", colorDimension(this.innerText));
+					break;
+				  }
+				}
+				h.click();
+			});
+			b.appendChild(c);
+		  }
+		  x[i].appendChild(b);
+		  a.addEventListener("click", function(e) {
+			  /*when the select box is clicked, close any other select boxes,
+			  and open/close the current select box:*/
+			  e.stopPropagation();
+			  closeAllSelect(this);
+			  this.nextSibling.classList.toggle("select-hide");
+			  this.classList.toggle("select-arrow-active");
+			});
+		}
+		function closeAllSelect(elmnt) {
+		  /*a function that will close all select boxes in the document,
+		  except the current select box:*/
+		  var x, y, i, xl, yl, arrNo = [];
+		  x = document.getElementsByClassName("select-items");
+		  y = document.getElementsByClassName("select-selected");
+		  xl = x.length;
+		  yl = y.length;
+		  for (i = 0; i < yl; i++) {
+			if (elmnt == y[i]) {
+			  arrNo.push(i)
+			} else {
+			  y[i].classList.remove("select-arrow-active");
+			}
+		  }
+		  for (i = 0; i < xl; i++) {
+			if (arrNo.indexOf(i)) {
+			  x[i].classList.add("select-hide");
+			}
+		  }
+		}
+		/*if the user clicks anywhere outside the select box,
+		then close all select boxes:*/
+		document.addEventListener("click", closeAllSelect);
+}
