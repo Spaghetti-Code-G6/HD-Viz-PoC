@@ -192,32 +192,28 @@ function isDatasetEmpty(dataset) {
 }
 
 function injectSelectionInHTML(element, non_numeric_keys) {
-	element.innerHTML += "<br/>"
-	element.innerHTML += "<label for='color_selection'>(Non funziona) Colora una dimensione: </label>"
-	element.innerHTML += "<select id = 'color_selection' onchange = 'colorDimension(value, selectedIndex)'>";
+	element.innerHTML += `
+		<span>Colora una dimensione:</span>
+		<div class="custom-select" style="width:200px; height:50px">
+			<select id="color_selection" onchange='colorDimension(value, selectedIndex)'>`;
 	const select = document.getElementById("color_selection");
 	non_numeric_keys.forEach((element) => {
 		select.innerHTML += `<option value = '${element}'> ${element}</option>`
 	});
-	element.innerHTML += "</select>"
+	element.innerHTML += `
+			</select>
+		</div>`;
 }
 
 function checkDimensionNumber(obj, checked) {
 	let number_of_checked = 0;
 
-	if (checked) {
-		let div_element = document.getElementById("dimensionSelection");
-		let childs = div_element.childNodes;
-		childs.forEach((element) => {
-			if (element.nodeName == "INPUT" && element.checked) {
-				number_of_checked++;
-			}
-		});
-		if (number_of_checked > max_dimensions) {
+	if (checked && tags.length === max_dimensions) {
+		
 			obj.checked = false;
-			alert("Reached max dimensions");
+			alert("Raggiounto numero massimo di dimensioni stampabili.");
 			return false;
-		}
+		
 	}
 	return true;
 }
@@ -269,17 +265,13 @@ function drawScatterPlot(dataset) {
 			if (tags.length < max_dimensions) {
 				tags.push(key); // printed dimensions
 			}
-			element.innerHTML += `<div><label for = '${key}'> ` + makeReadable({ key }) + `</label>`;
-			element.innerHTML += `<input id = '${key}' type = 'checkbox' name = '${key}'`
-				+ ((tags.includes(key)) ? "checked" : "")
-				+ ` onchange = 'adaptScatterPlot(this, checked)' value = '${key}' />`;
-			element.innerHTML += `</div>`;
+			element.innerHTML += `<label class="checkbox-container" for='${key}'> ` + makeReadable({ key })
+								+ `<input id='${key}' type='checkbox' name='${key}'`
+								+ ((tags.includes(key)) ? "checked" : "")
+								+ ` onchange = 'adaptScatterPlot(this, checked)' value='${key}' /><span class="checkmark"></span></label>`;
 		});
 
 		injectSelectionInHTML(element, non_numeric_keys);
-
-		element.innerHTML += "</br>"
-		element.innerHTML += "<button onclick='updatePlot()' type='button'>Plot Again</button>"
 
 		run();
 
@@ -288,12 +280,6 @@ function drawScatterPlot(dataset) {
 	} else {
 		alert("dataset empty!!!")
 	}
-}
-
-// TODO: link checkbox and color selection to this button
-function updatePlot() {
-	console.log("updatePlot pressed");
-	console.log("valid_keys: " + valid_keys);
 }
 
 function run() {
