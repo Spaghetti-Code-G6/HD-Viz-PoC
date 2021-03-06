@@ -2,7 +2,6 @@ import express from 'express'
 let dbRouter = express.Router();
 
 /* Sequelize */
-import config from '../components/configurationReader.js'
 import bodyParser from 'body-parser';
 
 import {setSession} from '../components/sessionManager.js'
@@ -10,14 +9,21 @@ import {setSession} from '../components/sessionManager.js'
 import pkg from 'sequelize';
 const {QueryTypes, Sequelize} = pkg;
 
+import config from '../components/configurationReader.js'
+const availableOptions = config.secureSend();
+
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 dbRouter.use(jsonParser);
 dbRouter.use(urlencodedParser);
-/** Semplice test.*/
-dbRouter.post('/selected', async (req,res) =>{
 
+/** Richiesta per ottenimento delle configurazione possibili.*/
+dbRouter.post('/available', (req,res)=> res.send({options:availableOptions}))
+
+/** Risposta alla selezione di una fonte tra quelle rese disponibili.*/
+dbRouter.post('/selected', async (req,res) =>{
+    console.log(req.body)
     /** Select the correct configuration.*/
     let data = config[req.body.selectedConfig];
 
@@ -29,7 +35,7 @@ dbRouter.post('/selected', async (req,res) =>{
 
     await connection.close();
 
-    setSession(req.session, 'db', makeMetadata(results));
+    setSession(req.session, 'db', makeMetadata(results), null, req.body.selectedConfig);
     res.send({data: results, meta: req.session.metadata});
 })
 
@@ -40,8 +46,9 @@ export function makeMetadata(jsonDataset){
 
     const metadata = {};
     Object.keys(jsonDataset[0]).forEach(entry => metadata[entry] = {
-            visibility: true,
-            type: !isNaN(+jsonDataset[0][entry]) ? typeof +jsonDataset[0][entry] : typeof jsonDataset[0][entry]})
+        visibility: true,
+        type: !isNaN(+jsonDataset[0][entry]) ? typeof +jsonDataset[0][entry] : typeof jsonDataset[0][entry]
+    })
 
     return metadata;
 }

@@ -9,6 +9,7 @@ const vertical_space = 0;
 
 function main() {
  	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", width).attr("height", heigth);
+ 	getAll();
 	lastSession();
 }
 
@@ -17,20 +18,14 @@ function main() {
  * 	però funziona.*/
 function lastSession(){
 
-	/** Test per vedere se funziona caricamento dati da database.*/
-	/*fetch('/selected', {
-		method : 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({ selectedConfig: 0 })
-	}).then(res => res.json()).then(res =>{//drawScatterPlot(res.data);})*/
-
-
 	fetch('/prevSession', {method:'GET'})
 	.then(res => res.json())
 	.then(res =>{
 		dataset = [];
-		if(res.hdConfig === 'csv')
-			d3.csv(res.hdFilePath, data => dataset.push(data)).then(() => drawScatterPlot(dataset))});
+		if(res.hdConfig === 'csv') d3.csv(res.hdFilePath, data => dataset.push(data)).then(() => drawScatterPlot(dataset));
+		else if(res.hdConfig === 'db') doSelection(res.hdDbSelection)
+
+	});
 }
 
 function sendData() {
@@ -46,13 +41,10 @@ function sendData() {
 	fetch('/csv/file', options)
 		.then(response => response.json())
 		.then(json => {
+
 			dataset = [];
-			console.log(json.url)
-			d3.csv(json.url, (data) => {
-				dataset.push(data);
-			})
-		.then(() => {
-			drawScatterPlot(dataset);
-		})
+
+			d3.csv(json.url, (data) => dataset.push(data)).then(() => {
+				drawScatterPlot(dataset);})
 	});
 }

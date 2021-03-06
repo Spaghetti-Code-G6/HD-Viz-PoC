@@ -56,12 +56,14 @@ sessionRouter.use('/session', (req, res) => res.send({sess : req.session}));
  *  @param {String} type: Stringa di tipo di configurazione (csv, db).
  *  @param {[]} metadata: Meta dati dei dati caricati.
  *  @param {String} src: Indirizzo fisico del file temporaneo in caso di uso di type === 'csv'.*/
-export function setSession(session, type, metadata, src = null){
+export function setSession(session, type, metadata, src = null, index = null){
     // Pare funzionare.
     session.regenerate((err) => {if(err) console.log(err)})
 
     session.hdConfig = type; session.metadata = metadata;
     if(session.hdConfig === 'csv') session.hdFilePath = src;
+    else if(session.hdConfig === 'db') session.hdDbSelection = index;
+
 }
 
 /** @deprecated: A scopo di monitoraggio.**/

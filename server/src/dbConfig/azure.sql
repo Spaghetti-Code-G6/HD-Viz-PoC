@@ -1,1 +1,1 @@
-SELECT  * FROM Specie;
+SELECT  * from approvazione;

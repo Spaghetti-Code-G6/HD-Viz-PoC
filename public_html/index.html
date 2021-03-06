@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="data_display.js"></script>
 	<script type="text/javascript" src="scatter_plot_matrix.js"></script>
 	<script type="text/javascript" src="aux_functions.js"></script>
+	<script type="text/javascript" src="db_connection.js"></script>
 
 	<script type="text/javascript" src="jquery.tabshort.js"></script>
 	<link
@@ -25,10 +26,15 @@
 	<h1>HD - Viz</h1>
 	
 	<div id="form-inserimento">
-		<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
+		<form id='uploadForm' method='post' encType="multipart/form-data">
 			<input type="file" name="csvFile" id="csvFile" />
 			<input type='button' value='Upload!' onclick="sendData()" />
+		</form>
+	</div>
 
+	<div>
+		<form id="dbForm">
+			<!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
 		</form>
 	</div>
 
