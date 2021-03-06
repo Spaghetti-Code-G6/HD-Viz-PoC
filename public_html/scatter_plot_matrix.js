@@ -142,6 +142,11 @@ function plot(key = non_numeric_keys[0]) {
 		} else {
 			color = "black";
 		}
+		
+		let toString = objToString(dataset[aux%dataset.length]);
+		// dataset[aux].forEach( (element, index) => {
+		// 	toString += tags[index] + ": 1" + "; ";
+		// })
 
 		svg.append("circle")
 			.attr("cx", x)
@@ -151,16 +156,21 @@ function plot(key = non_numeric_keys[0]) {
 			.attr("fill", color)
 			.attr("opacity", .4)
 		.append("svg:title")
-			.text("("
-				+(x_scale(element[0]))
-				+";"
-				+(y_scale(element[1]))
-				+")");
+			.text(toString);
 		
 		aux++;
 	})
 }
 
+function objToString (obj) {
+    var str = '';
+     for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            str += p + ': ' + obj[p] + "\n";
+        }
+    }
+    return str;
+}
 function colorDimension(value, selectedIndex) {
 	for (key in dataset[0]) {
 		if (key == value) {
