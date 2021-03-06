@@ -15,7 +15,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 dbRouter.use(jsonParser);
 dbRouter.use(urlencodedParser);
-/** Semplice test.*/
+
 dbRouter.post('/selected', async (req,res) =>{
 
     /** Select the correct configuration.*/
@@ -25,7 +25,6 @@ dbRouter.post('/selected', async (req,res) =>{
         {dialect: data.dialect, host: data.host,  port: data.port});
 
     const results = await connection.query(data.query, {type: QueryTypes.SELECT});
-    // TODO: Trovare un modo per fare la query ai tipi di dati.
 
     await connection.close();
 
@@ -33,9 +32,9 @@ dbRouter.post('/selected', async (req,res) =>{
     res.send({data: results, meta: req.session.metadata});
 })
 
-/** @param jsonDataset {Array<JSON>} Dati di cui è stata eseguita la query.
- *  @function Si potrebbe rendere async facendo consumatori / produttori.
- *  @return {Array<JSON>} meta dati costruiti. */
+/** @param jsonDataset {Array<JSON>} dataset.
+ *  @function could make it asyc with consumer/producer
+ *  @return {Array<JSON>} metadata. */
 export function makeMetadata(jsonDataset){
 
     const metadata = {};

@@ -1,160 +1,163 @@
-let x_scales = [];
-let y_scales = [];
-let x_axis = [];
-let y_axis = [];
+const MAX_DIMENSIONS = 5;
+const X_NUMBER_OF_TICKS = 4;
+const Y_NUMBER_OF_TICKS = 4;
+const RADIUS = 4;
+const COLORS = d3.schemeSet1;
+const SPACE_FOR_LABELS = 0;
+const AXIS_TEXT_FORMAT = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
+
+let xScales = [];
+let yScales = [];
+let xAxis = [];
+let yAxis = [];
 
 let tags = []; // actually printed dimensions
-let valid_keys = []; // all numeric dimensions
-let non_numeric_keys = []; // all Not numeric dimensions
-let non_numeric_values = [];
+let validKeys = []; // all numeric dimensions
+let nonNumericKeys = []; // all Not numeric dimensions
+let nonNumericValues = [];
 
-const max_dimensions = 5;
-const x_number_of_ticks = 4;
-const y_number_of_ticks = 4;
-const radius = 4;
-const colors = d3.schemeSet1;
-const SPACE_FOR_LABELS = 0;
 
-const axisTextFormat = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
+
+
 
 function createScales() {
-	const xSpaceForSingleChart = (width - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const ySpaceForSingleChart = (heigth - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
+	const X_SPACE_FOR_SINGLE_CHART = (WIDTH - PADDING * 2 - (tags.length - 1) * SPACE_BETWEEN_CHARTS) / (tags.length);
+	const Y_SPACE_FOR_SINGLE_CHART = (HEIGHT - PADDING * 2 - (tags.length - 1) * VERTICAL_SPACE) / (tags.length);
 	tags.forEach(dimensionName => {
 		let d3MinMax = d3.extent(dataset, d => +d[dimensionName]); // min on d3MinMax[0] and max on d3MinMax[1]
 
-		let current_x_scale = d3.scaleLinear()
+		let currentXScale = d3.scaleLinear()
 			.domain([d3MinMax[0], d3MinMax[1]])
-			.range([0, xSpaceForSingleChart]);
+			.range([0, X_SPACE_FOR_SINGLE_CHART]);
 
-		let current_y_scale = d3.scaleLinear()
+		let currentYScale = d3.scaleLinear()
 			.domain([d3MinMax[1], d3MinMax[0]])
-			.range([0, ySpaceForSingleChart]);
+			.range([0, Y_SPACE_FOR_SINGLE_CHART]);
 
-		x_scales.push(current_x_scale);
-		y_scales.push(current_y_scale);
+		xScales.push(currentXScale);
+		yScales.push(currentYScale);
 	});
 }
 
 function createAxis(axis) {
 	if (axis == "x") {
-		x_scales.forEach(element => {
-			x_axis.push(d3.axisBottom(element)
-			.ticks(x_number_of_ticks)
-			.tickFormat(axisTextFormat))
+		xScales.forEach(element => {
+			xAxis.push(d3.axisBottom(element)
+			.ticks(X_NUMBER_OF_TICKS)
+			.tickFormat(AXIS_TEXT_FORMAT))
 		});
 	} else if (axis == "y") {
-		y_scales.forEach(element => {
-			y_axis.push(d3.axisLeft(element)
-			.ticks(y_number_of_ticks)
-			.tickFormat(axisTextFormat))
+		yScales.forEach(element => {
+			yAxis.push(d3.axisLeft(element)
+			.ticks(Y_NUMBER_OF_TICKS)
+			.tickFormat(AXIS_TEXT_FORMAT))
 		});
 	} else {
 		alert("Wrong parameter in creation of axis");
 	}
 }
 
-function plot(key = non_numeric_keys[0]) {
+function plot(key = nonNumericKeys[0]) {
 	takeValues();
-	const xSpaceForSingleChart = (width - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
-	const ySpaceForSingleChart = (heigth - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
-	const svg = d3.select("svg");
+	const X_SPACE_FOR_SINGLE_CHART = (WIDTH - PADDING * 2 - (tags.length - 1) * SPACE_BETWEEN_CHARTS) / (tags.length);
+	const Y_SPACE_FOR_SINGLE_CHART = (HEIGHT - PADDING * 2 - (tags.length - 1) * VERTICAL_SPACE) / (tags.length);
+	const SVG = d3.select("svg");
 	convertDatasetToArray();
 	let coord = [];
 
 	let label = tags;
-	let reverse_label = label.slice(0,5).reverse();
+	let reverseLabel = label.slice(0,5).reverse();
 
-	y_scales.forEach((element, i) => {
-		let beginning_y = padding + i * vertical_space + i * ySpaceForSingleChart;
-		x_scales.forEach((inner_element, j) => {
-			let beginning_x = padding + j * space_between_charts + j * xSpaceForSingleChart+SPACE_FOR_LABELS;
+	yScales.forEach((element, i) => {
+		let beginningY = PADDING + i * VERTICAL_SPACE + i * Y_SPACE_FOR_SINGLE_CHART;
+		xScales.forEach((innerElement, j) => {
+			let beginningX = PADDING + j * SPACE_BETWEEN_CHARTS + j * X_SPACE_FOR_SINGLE_CHART+SPACE_FOR_LABELS;
 
-			svg.append("g")
-				.attr("transform", "translate(" + beginning_x + ", " + beginning_y + ")")
-				.call(y_axis[i])
+			SVG.append("g")
+				.attr("transform", "translate(" + beginningX + ", " + beginningY + ")")
+				.call(yAxis[i])
 				.attr("class", "axis" + (j != 0 ? " no_tick" : ""));
 
 				//etichette per l'asse y
-				svg.append("text")
-					.attr("transform", "translate(" + 20 + ", " + (beginning_y+(0.5*ySpaceForSingleChart)) + "),rotate(-90)")
+				SVG.append("text")
+					.attr("transform", "translate(" + 20 + ", " + (beginningY+(0.5*Y_SPACE_FOR_SINGLE_CHART)) + "),rotate(-90)")
 					.style("text-anchor", "middle")
 					.attr("fill", "#635F5D")
 					.text(makeReadableGlobal(tags[i].toString()));
 
 				//etichette per l'asse x
-				svg.append("text")
-					.attr("transform", "translate(" 
-					+ (((tags.length)*xSpaceForSingleChart) - ((tags.length-i)*xSpaceForSingleChart) + ySpaceForSingleChart) 
-					+ ", " + (`${heigth}`-20) + ")")
+				SVG.append("text")
+					.attr("transform", "translate("
+					+ (((tags.length)*X_SPACE_FOR_SINGLE_CHART) - ((tags.length-i)*X_SPACE_FOR_SINGLE_CHART) + Y_SPACE_FOR_SINGLE_CHART)
+					+ ", " + (`${HEIGHT}`-20) + ")")
 					.style("text-anchor", "end")
 					.attr("fill", "#635F5D")
-					.text(makeReadableGlobal(reverse_label[i].toString()));
+					.text(makeReadableGlobal(reverseLabel[i].toString()));
 
-			svg.append("g")
-				.attr("transform", "translate(" + beginning_x + ", " + (beginning_y + ySpaceForSingleChart) + ")")
-				.call(x_axis[tags.length - j - 1])
+			SVG.append("g")
+				.attr("transform", "translate(" + beginningX + ", " + (beginningY + Y_SPACE_FOR_SINGLE_CHART) + ")")
+				.call(xAxis[tags.length - j - 1])
 				.attr("class", "axis" + (i != (tags.length - 1) ? " no_tick" : ""));
 
-			array_dataset.forEach((row) => {
-				let temp_coord = [];
-				temp_coord.push(row[j]);	// x
-				temp_coord.push(row[i]);	// y
-				coord.push(temp_coord);
+			arrayDataset.forEach((row) => {
+				let tempCoord = [];
+				tempCoord.push(row[j]);	// x
+				tempCoord.push(row[i]);	// y
+				coord.push(tempCoord);
 			});
 
 		});
 	});
 
-	const boolForBlack = non_numeric_keys.length <= colors.length
+	const BOOL_FOR_BLACK = nonNumericKeys.length <= COLORS.length
 
 	let aux = 0;
 	coord.forEach((element) => {
-		const auxiliary_index = Math.floor(aux / dataset.length);
-		const x_scale_index = auxiliary_index % tags.length;
-		const y_scale_index = Math.floor(auxiliary_index / tags.length);
-		
-		const x_scale = x_scales[x_scale_index];
-		const y_scale = y_scales[y_scale_index];
-		
+		const AUXILIARY_INDEX = Math.floor(aux / dataset.length);
+		const X_SCALE_INDEX = AUXILIARY_INDEX % tags.length;
+		const Y_SCALE_INDEX = Math.floor(AUXILIARY_INDEX / tags.length);
 
-		const x = padding
-			+ x_scale(element[0])
-			+ (tags.length - 1) * space_between_charts
-			+ (tags.length - 1) * xSpaceForSingleChart
-			- x_scale_index * space_between_charts
-			- x_scale_index * xSpaceForSingleChart;
+		const X_SCALE = xScales[X_SCALE_INDEX];
+		const Y_SCALE = yScales[Y_SCALE_INDEX];
 
-		const y = padding
-			+ y_scale(element[1])
-			+ y_scale_index * vertical_space
-			+ y_scale_index * ySpaceForSingleChart;
+
+		const X = PADDING
+			+ X_SCALE(element[0])
+			+ (tags.length - 1) * SPACE_BETWEEN_CHARTS
+			+ (tags.length - 1) * X_SPACE_FOR_SINGLE_CHART
+			- X_SCALE_INDEX * SPACE_BETWEEN_CHARTS
+			- X_SCALE_INDEX * X_SPACE_FOR_SINGLE_CHART;
+
+		const Y = PADDING
+			+ Y_SCALE(element[1])
+			+ Y_SCALE_INDEX * VERTICAL_SPACE
+			+ Y_SCALE_INDEX * Y_SPACE_FOR_SINGLE_CHART;
 
 		let color;
 
-		if (boolForBlack && non_numeric_keys.includes(key)) {
-			const dataset_index = aux - auxiliary_index * dataset.length;
-			const single_element = dataset[dataset_index];
-			const single_key_value = `${single_element[key]}`
-			let key_position = non_numeric_keys.indexOf(key);
-			let values = non_numeric_values[key_position];
-			color = colors[values.indexOf(single_key_value)];
+		if (BOOL_FOR_BLACK && nonNumericKeys.includes(key)) {
+			const DATASET_INDEX = aux - AUXILIARY_INDEX * dataset.length;
+			const SINGLE_ELEMENT = dataset[DATASET_INDEX];
+			const SINGLE_KEY_VALUE = `${SINGLE_ELEMENT[key]}`
+			let keyPosition = nonNumericKeys.indexOf(key);
+			let values = nonNumericValues[keyPosition];
+			color = COLORS[values.indexOf(SINGLE_KEY_VALUE)];
 		} else {
 			color = "black";
 		}
-		
+
 		let toString = objToString(dataset[aux%dataset.length]);
 
-		svg.append("circle")
-			.attr("cx", x)
-			.attr("cy", y)
-			.attr("r", radius)
+		SVG.append("circle")
+			.attr("cx", X)
+			.attr("cy", Y)
+			.attr("r", RADIUS)
 			.attr("class", "dot")
 			.attr("fill", color)
 			.attr("opacity", .4)
 		.append("svg:title")
 			.text(toString);
-		
+
 		aux++;
 	})
 }
@@ -171,17 +174,17 @@ function objToString (obj) {
 function colorDimension(value) {
 	for (key in dataset[0]) {
 		if (key == value) {
-			let aux_data = dataset[0]
-			if (!isNaN(parseFloat(`${aux_data[key]}`))) {
+			let auxData = dataset[0]
+			if (!isNaN(parseFloat(`${auxData[key]}`))) {
 				alert("You have to select a non numeric key.");
 			} else {
-				non_numeric_values = [];
+				nonNumericValues = [];
 				dataset.forEach((element) => {
-					if (non_numeric_values.indexOf(`${element[key]}`) == -1) {
-						non_numeric_values.push(`${element[key]}`);
+					if (nonNumericValues.indexOf(`${element[key]}`) == -1) {
+						nonNumericValues.push(`${element[key]}`);
 					}
 				});
-				if (colors.length > non_numeric_values.length) {
+				if (COLORS.length > nonNumericValues.length) {
 					d3.select("svg").selectAll("circle").remove()
 					plot(key)
 				}
@@ -198,32 +201,29 @@ function isDatasetEmpty(dataset) {
 	return false;
 }
 
-function injectSelectionInHTML(element, non_numeric_keys) {
+function injectSelectionInHTML(element, nonNumericKeys) {
 	element.innerHTML += `
 		<hr>
-		<span class="menu-label">Colora una dimensione:</span>
-		<div class="custom-select" style="width:200px; height:50px">
+		<span class="menu-label">Color a dimension:</span>
+		<div class="custom-select" style="WIDTH:200px; height:50px">
 			<select id="color_selection" onchange='colorDimension(value, selectedIndex)'>`;
-	const select = document.getElementById("color_selection");
-	non_numeric_keys.forEach((element) => {
-		select.innerHTML += `<option value = '${element}'> ${element}</option>`
+	const SELECT = document.getElementById("color_selection");
+	nonNumericKeys.forEach((element) => {
+		SELECT.innerHTML += `<option value = '${element}'> ${element}</option>`
 	});
 	element.innerHTML += `
 			</select>
 		</div>`;
-	
+
 	customSelectMenu();
 }
 
 function checkDimensionNumber(obj, checked) {
-	let number_of_checked = 0;
-
-	if (checked && tags.length === max_dimensions) {
-		
+	if (checked && tags.length === MAX_DIMENSIONS) {
 			obj.checked = false;
-			alert("Raggiounto numero massimo di dimensioni stampabili.");
+			alert("Max amount of dimensions limit reached");
+
 			return false;
-		
 	}
 	return true;
 }
@@ -237,13 +237,13 @@ function adaptScatterPlot(obj, checked) {
 		}
 
 		d3.select("svg").selectAll("*").remove();
-		x_scales = [];
-		y_scales = [];
-		x_axis = [];
-		y_axis = [];
-		x_scales = [];
-		y_scales = [];
-		
+		xScales = [];
+		yScales = [];
+		xAxis = [];
+		yAxis = [];
+		xScales = [];
+		yScales = [];
+
 		run();
 	}
 }
@@ -254,18 +254,18 @@ function drawScatterPlot(dataset) {
 		clearAll();
 
 		const element = document.getElementById("dimensionSelection");
-		const aux_data = dataset[0];
-		const keys = Object.keys(aux_data);
+		const auxData = dataset[0];
+		const keys = Object.keys(auxData);
 
 		keys.forEach(element => {
-			if (!isNaN(+(aux_data[element]))) {
-				valid_keys.push(element);
+			if (!isNaN(+(auxData[element]))) {
+				validKeys.push(element);
 			}
 		});
 
-		for (key in aux_data) {
-			if (!valid_keys.includes(key) && isNaN(+(aux_data[element]))) {
-				non_numeric_keys.push(key);
+		for (key in auxData) {
+			if (!validKeys.includes(key) && isNaN(+(auxData[element]))) {
+				nonNumericKeys.push(key);
 			}
 		}
 
@@ -273,9 +273,9 @@ function drawScatterPlot(dataset) {
 
 		element.innerHTML += `<h2>MENU</h2>
 		<hr>
-		<span class="menu-label">Dimensioni stampate:</span>`
-		valid_keys.forEach(key => {
-			if (tags.length < max_dimensions) {
+		<span class="menu-label">Dimension plotted:</span>`
+		validKeys.forEach(key => {
+			if (tags.length < MAX_DIMENSIONS) {
 				tags.push(key); // printed dimensions
 			}
 			element.innerHTML += `
@@ -286,14 +286,14 @@ function drawScatterPlot(dataset) {
 				</label>`;
 		});
 
-		injectSelectionInHTML(element, non_numeric_keys);
+		injectSelectionInHTML(element, nonNumericKeys);
 
 		run();
 
 		let end = performance.now();
 		console.log(`Execution time: ${((end - start) / 1000).toFixed(2)} seconds`);
 	} else {
-		alert("dataset empty!!!")
+		alert("Empty dataset!")
 	}
 }
 
@@ -302,7 +302,7 @@ function run() {
 	createAxis("x"); // ??
 	createAxis("y"); // ??
 	plot();
-} 
+}
 
 // custom select menu from w3c
 function customSelectMenu() {

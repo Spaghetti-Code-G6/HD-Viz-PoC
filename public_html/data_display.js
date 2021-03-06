@@ -1,30 +1,21 @@
+const WIDTH = 1100;
+const HEIGHT = 1100;
+const PADDING = 60;
+const SPACE_BETWEEN_CHARTS = 0;
+const VERTICAL_SPACE = 0;
 
 let dataset = [];
 
-const width = 1100;
-const heigth = 1100;
-const padding = 60;
-const space_between_charts = 0;
-const vertical_space = 0;
+
 
 function main() {
- 	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", width).attr("height", heigth);
+ 	const SVG = d3.select("#scatter_plot_content").append("svg").attr("width", WIDTH).attr("height", HEIGHT);
 	lastSession();
 }
 
 
-/** Prende i dati della scorsa operazione fatta su HdViz (molto prototipo al momento in quanto sarà più grosso)
- * 	però funziona.*/
+/** loads last session data */
 function lastSession(){
-
-	/** Test per vedere se funziona caricamento dati da database.*/
-	/*fetch('/selected', {
-		method : 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({ selectedConfig: 0 })
-	}).then(res => res.json()).then(res =>{//drawScatterPlot(res.data);})*/
-
-
 	fetch('/prevSession', {method:'GET'})
 	.then(res => res.json())
 	.then(res =>{

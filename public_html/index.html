@@ -8,7 +8,6 @@
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<script type="text/javascript" src="aux_for_samuel.js"></script>
 	<script type="text/javascript" src="d3.v6.min.js"></script>
 	<script type="text/javascript" src="data_display.js"></script>
 	<script type="text/javascript" src="scatter_plot_matrix.js"></script>
@@ -21,10 +20,10 @@
     />
 </head>
 <body onload="main()">
-	
+
 	<h1>HD - Viz</h1>
-	
-	<div id="form-inserimento">
+
+	<div id="upload-form">
 		<span class="menu-label">Carica file</span>
 		<form ref='uploadForm' id='uploadForm' action='/file' method='post' encType="multipart/form-data">
 			<input id="csvFile" type="file" name="csvFile" />
@@ -38,7 +37,7 @@
 		<button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>
 		<button class="tablinks" onclick="openPage(event, 'HeatMap')">Heat Map</button>
 		<button class="tablinks" onclick="openPage(event, 'DistanceMap')">Distance Map</button>
-		<button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Proiezione Lineare</button>
+		<button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Multi Axis Linear Projection</button>
 	</div>
 
 	<div id="ScatterPlot" class="tabcontent">
@@ -64,12 +63,12 @@
 	</div>
 
 	<div id="ProiezioneLineare" class="tabcontent">
-		<h2>Proiezione Lineare Multiasse</h2>
+		<h2>Multi Axis Linear Projection</h2>
 		<p>Coming soon...</p>
 	</div>
 
 	<script>
-		
+
 	</script>
 </body>
 </html>

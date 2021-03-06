@@ -54,7 +54,7 @@ svg {
   color: black;
 }
 
-#form-inserimento {
+#upload-form {
   background-color: #eee;
   border-radius: 5px;
   padding: 1em;
@@ -62,7 +62,7 @@ svg {
   width: 40%;
 }
 
-#form-inserimento input {
+#upload-form input {
   background-color: DodgerBlue;
   color: #fff;
   border: none;
@@ -72,7 +72,7 @@ svg {
   padding: .5em;
 }
 
-#form-inserimento input:hover{
+#upload-form input:hover{
   background-color: #1b81e5;
   cursor: pointer;
 }

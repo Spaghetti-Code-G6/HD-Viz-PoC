@@ -1,5 +1,5 @@
 import express from 'express'
-/** Middle-ware per la gestione dell upload dei file.*/
+/** Middle-ware for file upload.*/
 import uploader from 'express-fileupload'
 
 import fs from 'fs'
@@ -7,28 +7,26 @@ import readLine from 'readline'
 
 let csvRouter = express.Router()
 
-/** Gestore della sessione.*/
+/** session manager.*/
 import {setSession}  from '../components/sessionManager.js'
 
-/** Utilizzo di uploader con configurazione di limiti.*/
+/** setting limits.*/
 csvRouter.use(uploader({
 
-    limits : { fileSize: 500 * 1048576 }, /** Limite in dimensione del file caricato.*/
+    limits : { fileSize: 500 * 1048576 }, /** file dimension limit.*/
 
     useTempFiles : true,
     tempFileDir: 'server/csv/tmp/'
 
 }));
 
-/** Effettua il caricamento del csv e il reperimento dei dati interessati alla creazione del grafico, istanziando
- *  i parametri della sessione corrente in modo da poter gestire perdite di connessioni.*/
+/**loads csv and gathers data, setting session so that connection loss are managed.*/
 csvRouter.post('/file', async (req, res) =>{
 
-    if(req.files) { /* Caricato con successo il file.*/
+    if(req.files) { /* file upload successfully*/
         if (checkCsv(req.files.csvFile.name)) {
 
             const firstLines = await read(2, req.files.csvFile.tempFilePath);
-            /* Riga di testa e prima riga di record divisi per campo.*/
             if(firstLines.length > 1) {
 
                 firstLines[0] = firstLines[0].split(',');
@@ -38,12 +36,12 @@ csvRouter.post('/file', async (req, res) =>{
                 for (let i = 0; i < firstLines[0].length; i++) {
 
                     metaData[firstLines[0][i]] = {
-                        visibility: true, /* Nome campo, visibilità e tipo.*/
+                        visibility: true,
                         type: !isNaN(+firstLines[1][i]) ? typeof +firstLines[1][i] : typeof firstLines[1][i],
                     }
 
                 }
-                /** Settaggio corretto della sessione corrente.*/
+                /** correct setting of current session.*/
                 setSession(req.session, 'csv', metaData, req.files.csvFile.tempFilePath);
                 console.log(req.files.csvFile.tempFilePath)
                 res.send({url: await req.files.csvFile.tempFilePath, meta: metaData})
@@ -55,9 +53,9 @@ csvRouter.post('/file', async (req, res) =>{
 function checkCsv(fileName) { return fileName.substr(fileName.length - 4) === '.csv'; }
 
 
-/** @param  limit : number Righe che si vogliono estrarre a partire da 0.
- *  @param  path : String Percorso del file.
- *  @return {Promise<Array>} : Righe lette e salvate.*/
+/** @param  limit : number rows to be extracted.
+ *  @param  path : String file path.
+ *  @return {Promise<Array>} : read and saved rows.*/
 function read(limit, path){
 
     const readStream = readLine.createInterface({ input: fs.createReadStream(path)})
@@ -67,13 +65,12 @@ function read(limit, path){
 
         readStream.on("line", chunk => {
             counter ++; readLines.push(chunk);
-            // Non so perché ma mi controlla tutte le righe. Probabilmente entra in esecuzione prima della chiusura.
+
             if(counter === limit)  readStream.close(); });
 
-        readStream.on("close", () => resolve(readLines)); /** Restituisce il valore di promessa*/
-        readStream.on("error", error => reject(error)); /** Manda errore, da gestire.*/
+        readStream.on("close", () => resolve(readLines)); /** returns promised value*/
+        readStream.on("error", error => reject(error));
     }));
 }
 
 export default csvRouter;
-
