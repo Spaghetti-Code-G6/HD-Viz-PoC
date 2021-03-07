@@ -37,8 +37,10 @@ dbRouter.post('/selected', async (req, res) => {
 
     await connection.close();
 
-    await setSession(req, 'db', makeMetadata(results), null, req.body.selectedConfig);
-    res.send({data: results, meta: await req.session.metadata});
+    setSession(req, 'db', makeMetadata(results), null, req.body.selectedConfig).then(()=>
+        res.send({data: results, metadata: req.session.metadata}));
+    //TODO: Uniformare le risposte in modo da poterlo fare da funzione (minimo errore possibile).
+
 })
 
 /** @param jsonDataset {Array<JSON>} Dati di cui è stata eseguita la query.

@@ -18,6 +18,7 @@ const SPACE_FOR_LABELS = 0;
 const axisTextFormat = (n) => n > 999 ? d3.format('.2s')(n).replace('G', 'B') : d3.format('')(n);
 
 function createScales() {
+
     const xSpaceForSingleChart = (width - padding * 2 - (tags.length - 1) * space_between_charts) / (tags.length);
     const ySpaceForSingleChart = (heigth - padding * 2 - (tags.length - 1) * vertical_space) / (tags.length);
     tags.forEach(dimensionName => {

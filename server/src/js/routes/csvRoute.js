@@ -44,7 +44,7 @@ csvRouter.post('/file', async (req, res) => {
                 }
                 /** Settaggio corretto della sessione corrente.*/
                 await setSession(req, 'csv', metaData, req.files.csvFile.tempFilePath);
-                res.send({url: await req.files.csvFile.tempFilePath, meta: metaData})
+                res.send({url: await req.files.csvFile.tempFilePath, metadata: metaData})
             } else {
                 res.send({err: 'Errore nella dimensione del file'});
             }

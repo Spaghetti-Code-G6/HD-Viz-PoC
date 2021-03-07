@@ -5,8 +5,9 @@ import csvRoute from "./src/js/routes/csvRoute.js";
 
 /** File di configurazione di accesso al database e dati relativi.*/
 import config from './src/js/components/configurationReader.js'
-
 import dbRoute from './src/js/routes/dbRoute.js';
+
+import updateRoute from './src/js/routes/updateRoute.js'
 
 let hdViz = express()
 const PORT = 8085; /** Porta alla quale il server fa ascolto.*/
@@ -20,6 +21,8 @@ hdViz.use(sessionRouter);
 hdViz.use('/csv', csvRoute);
 
 hdViz.use(dbRoute);
+
+hdViz.use('/update', updateRoute);
 
 /** @deprecated*/
 hdViz.get('/db/list', ((req, res) => res.send(config.secureSend())))

@@ -62,7 +62,7 @@ sessionRouter.use('/session', (req, res) => res.send({sess: req.session}));
  *  @param index {?Number} : Index of the database selectable elements, if db selected.
  *  @param {String} src:  Path of temporary file, if csv as src selected.*/
 export function setSession(req, type, metadata, src = null, index = null) {
-
+    //TODO: Remove promise and use callback.
     return new Promise(((resolve, reject) => {
         req.session.regenerate((err) =>{
             /** Everything in the callback happens after the regenerate function takes place.*/
