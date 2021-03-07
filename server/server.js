@@ -29,10 +29,8 @@ hdViz.get('/db/list', ((req, res) => res.send(config.secureSend())))
 /** Manda (post o get) Un oggetto contenente i dati della sessione. Esso è vuoto nel momento in cui non è ancora stato
  *  effettuato un caricamento da una fonte dati o se la sessione precedente è scaduta, altrimenti contiene i meta dati, la cfg e le eventuali proprietà del grafico.*/
 hdViz.use('/prevSession', ((req, res) => {
-
     /** Deep copy of object. Così non mandiamo dati sul cookie e le cose che il front end non deve avere.*/
     let sessionApp = JSON.parse(JSON.stringify(req.session));
-
     delete sessionApp.cookie; /* Elimino parte di cookie.*/
     res.send(sessionApp);
 

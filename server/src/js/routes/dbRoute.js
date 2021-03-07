@@ -24,20 +24,21 @@ dbRouter.post('/available', (req, res) =>
 
 /** Risposta alla selezione di una fonte tra quelle rese disponibili.*/
 dbRouter.post('/selected', async (req, res) => {
-    console.log(req.body)
-    /** Select the correct configuration.*/
+    /** Select the correct configuration.
+     *  TODO: Make fool proof (check index)*/
     let data = config[req.body.selectedConfig];
 
     let connection = new Sequelize(data.database, data.username, data.password,
         {dialect: data.dialect, host: data.host, port: data.port});
 
     const results = await connection.query(data.query, {type: QueryTypes.SELECT});
+
     // TODO: Trovare un modo per fare la query ai tipi di dati.
 
     await connection.close();
 
-    setSession(req.session, 'db', makeMetadata(results), null, req.body.selectedConfig);
-    res.send({data: results, meta: req.session.metadata});
+    await setSession(req, 'db', makeMetadata(results), null, req.body.selectedConfig);
+    res.send({data: results, meta: await req.session.metadata});
 })
 
 /** @param jsonDataset {Array<JSON>} Dati di cui è stata eseguita la query.

@@ -45,7 +45,7 @@ sessionRouter.use(session({
 
     cookie: {maxAge: 1800000}, /* Età massima del cookie prima di perdere validità. */
     store: sessionStore,    /* Magazzino delle sessioni. */
-
+    unset: 'destroy',
     secret: 'Spaghetti',
     saveUninitialized: true,
     resave: false
@@ -55,25 +55,27 @@ sessionRouter.use(session({
 /** Ottieni i dati della sessione.*/
 sessionRouter.use('/session', (req, res) => res.send({sess: req.session}));
 
-/** @description Settaggio della sessione corrente da dati di caricamento.
- *  @param session: Elemento di rappresentazione della sessione da impostare.
- *  @param {String} type: Stringa di tipo di configurazione (csv, db).
- *  @param {[]} metadata: Meta dati dei dati caricati.
- *  @param {String} src: Indirizzo fisico del file temporaneo in caso di uso di type === 'csv'.*/
-export function setSession(session, type, metadata, src = null, index = null) {
-    // Pare funzionare.
-    session.regenerate((err) => {
-        if (err) console.log(err)
-    })
+/** @description Setup of the current user session with its data.
+ *  @param req: Request passed that has a session property.
+ *  @param {String} type: Source of the data (csv, db).
+ *  @param {[]} metadata: Metadata to store in the session (to not calculate again).
+ *  @param index {?Number} : Index of the database selectable elements, if db selected.
+ *  @param {String} src:  Path of temporary file, if csv as src selected.*/
+export function setSession(req, type, metadata, src = null, index = null) {
 
-    session.hdConfig = type;
-    session.metadata = metadata
+    return new Promise(((resolve, reject) => {
+        req.session.regenerate((err) =>{
+            /** Everything in the callback happens after the regenerate function takes place.*/
+            if(err) reject(err);
 
-    if (session.hdConfig === 'csv')
-        session.hdFilePath = src;
-    else if (session.hdConfig === 'db')
-        session.hdDbSelection = index;
+            req.session.hdConfig = type;
+            req.session.metadata = metadata
 
+            if (type === 'csv')  req.session.hdFilePath = src;
+            else if (type  === 'db') req.session.hdDbSelection = index;
+            resolve(true);
+        })
+    }))
 }
 
 /** @deprecated: A scopo di monitoraggio.**/
@@ -81,6 +83,6 @@ let checkSessions = setInterval(() => sessionStore.all((err, session) => {
     if (err) console.log(err);
     console.log("HERES STARTS THIS TICK", session)
 
-}), 3000)
+}), 9000000)
 
 export default sessionRouter;

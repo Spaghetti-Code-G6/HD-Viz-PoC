@@ -9,8 +9,9 @@ const vertical_space = 0;
 
 function main() {
  	const svg = d3.select("#scatter_plot_content").append("svg").attr("width", width).attr("height", heigth);
- 	getAll();
 	lastSession();
+ 	getAll();
+
 }
 
 
@@ -22,6 +23,7 @@ function lastSession(){
 	.then(res => res.json())
 	.then(res =>{
 		dataset = [];
+		console.log(res);
 		if(res.hdConfig === 'csv') d3.csv(res.hdFilePath, data => dataset.push(data)).then(() => drawScatterPlot(dataset));
 		else if(res.hdConfig === 'db') doSelection(res.hdDbSelection)
 
