@@ -25,20 +25,22 @@
 
 <h1>HD - Viz</h1>
 
-<div id="form-inserimento">
-    <span class="menu-label">Carica file</span>
-    <form action='/file' encType="multipart/form-data" id='uploadForm' method='post' ref='uploadForm'>
-        <input id="csvFile" name="csvFile" type="file"/>
-        <input onclick="sendData()" type="button" value='Carica'/>
-    </form>
-</div>
+<div id="selectors">
+    <div class="form-inserimento">
+        <span class="menu-label">Carica file</span>
+        <form action='/file' encType="multipart/form-data" id='uploadForm' method='post' ref='uploadForm'>
+            <input id="csvFile" name="csvFile" type="file"/>
+            <input onclick="sendData()" type="button" value='Carica'/>
+        </form>
+    </div>
 
-<div>
-    <form id="dbForm">
-        <!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
-    </form>
+    <div class="form-inserimento">
+        <span class="menu-label"> Carica da database </span>
+        <form id="dbForm">
+                  <!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
+        </form>
+    </div>
 </div>
-
 <div class="tab" id="tab-menu">
     <button class="tablinks active" onclick="openPage(event, 'ScatterPlot')">Scatter Plot Matrix</button>
     <button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>

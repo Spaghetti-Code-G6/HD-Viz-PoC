@@ -7,8 +7,12 @@ function getAll() {
     }).then(res => res.json()).then(data => {
         let element = document.getElementById('dbForm');
         data.options.forEach(dat => /** Aggiunta di selezioni*/
-            element.innerHTML += '<input id="' + dat.index + '" type="button" value="test" onClick="doSelection(this.id)">'
-                + dat.name + ' ' + dat.description + '</input>')
+            element.innerHTML +=
+                '<div class="db-sel">'+
+                '<h3>'+ dat.name +'</h3>' +
+                '<span class="dat-description"> '+ dat.description  + '</span>' +
+                '<input id="' + dat.index + '" type="button" value="Carica" onClick="doSelection(this.id)">'+
+                '</div>')
     })
 
 }

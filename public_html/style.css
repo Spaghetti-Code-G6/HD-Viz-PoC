@@ -54,15 +54,15 @@ svg {
   color: black;
 }
 
-#form-inserimento {
+.form-inserimento {
   background-color: #eee;
   border-radius: 5px;
   padding: 1em;
   margin-bottom: 1em;
-  width: 40%;
+  width: 48%;
 }
 
-#form-inserimento input {
+.form-inserimento input {
   background-color: DodgerBlue;
   color: #fff;
   border: none;
@@ -72,11 +72,27 @@ svg {
   padding: .5em;
 }
 
-#form-inserimento input:hover{
+.form-inserimento input:hover{
   background-color: #1b81e5;
   cursor: pointer;
 }
 
+.db-sel{
+  background-color: #dddddd;
+  font-size: 18px;
+  padding-top: 1em;
+  padding-left: 1em;
+  padding-bottom: 0.4em;
+  width: 90%;
+}
+.dat-description{
+  margin-right: 1em;
+
+}
+#selectors{
+  display: flex;
+  justify-content: space-evenly;
+}
 
 input[type=file]::-webkit-file-upload-button {
   border: 1px solid #fff;
