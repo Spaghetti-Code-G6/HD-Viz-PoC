@@ -6,7 +6,7 @@
   "port": "3306",
 
   "database": "WebBirdDB",
-  "username": "jacopo",
+  "username": "root",
   "password": "",
 
   "dialect": "mariadb",

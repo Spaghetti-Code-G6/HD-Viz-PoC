@@ -7,3 +7,4 @@ run.cmd
 public_html/tmp/
 .idea/
 server/src/dbConfig/baseQueryForTypes.sql
+package-lock.json
