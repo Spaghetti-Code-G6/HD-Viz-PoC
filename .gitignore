@@ -1,0 +1,9 @@
+/node_modules/
+/server/csv/tmp/
+/project/
+node_modules/
+node/
+run.cmd
+public_html/tmp/
+.idea/
+server/src/dbConfig/baseQueryForTypes.sql

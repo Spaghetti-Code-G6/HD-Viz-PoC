@@ -1,0 +1,16 @@
+{
+  "name": "azure",
+  "description": "A database in which we have stored the sky and clounds",
+
+  "host": "localhost",
+  "port": "3306",
+
+  "database": "WebBirdDB",
+  "username": "jacopo",
+  "password": "",
+
+  "dialect": "mariadb",
+
+  "dialectOptions": {}
+
+}

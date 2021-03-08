@@ -1,0 +1,308 @@
+body {
+  background-color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+#scatter_plot_content {
+  display: inline;
+}
+
+#dimensionSelection {
+  display: inline;
+  float: right;
+  color: black;
+  background-color: #fff;
+  width: 20%;
+  border-radius: 5px;
+  padding: 1em;
+  margin-left: 1em;
+  position:absolute;
+}
+
+#various_buttons {
+  display: inline-block;
+  margin-bottom: 3em;
+}
+
+.no_display {
+  display: none;
+}
+
+svg {
+  background-color: #fff;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.tick line{
+  stroke: #c0c0bb;
+}
+
+.tick text {
+  fill: #635f5d;
+}
+
+.no_tick text {
+  display: none;
+}
+
+.axis path {
+  stroke: #c0c0bb;
+}
+
+#titolo h1 {
+  color: black;
+}
+
+.form-inserimento {
+  background-color: #eee;
+  border-radius: 5px;
+  padding: 1em;
+  margin-bottom: 1em;
+  width: 48%;
+}
+
+.form-inserimento input {
+  background-color: DodgerBlue;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  font-size: 18px;
+  margin-right: 1em;
+  padding: .5em;
+}
+
+.form-inserimento input:hover{
+  background-color: #1b81e5;
+  cursor: pointer;
+}
+
+.db-sel{
+  background-color: #dddddd;
+  font-size: 18px;
+  padding-top: 1em;
+  padding-left: 1em;
+  padding-bottom: 0.4em;
+  width: 90%;
+}
+.dat-description{
+  margin-right: 1em;
+
+}
+#selectors{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+input[type=file]::-webkit-file-upload-button {
+  border: 1px solid #fff;
+  color: #fff;
+  padding: .5em;
+  margin-right: 1em;
+  border-radius: 5px;
+  background-color: DodgerBlue;
+}
+
+input[type=file]::-webkit-file-upload-button:hover {
+  background-color: #1b81e5;
+}
+
+#menu ul {
+  list-style: none;
+  display: flex;
+  padding-left: 0em;
+}
+
+#menu li {
+  margin-right: 0.5em;
+}
+
+#menu button {
+  padding: 0.5em;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  background-color: #bbb;
+  border-radius: 5px;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ccc;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ddd;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+  background: #eee;
+}
+
+#ScatterPlot {
+  display: block;
+}
+
+.tabcontent h2,
+p {
+  color: black;
+}
+
+.menu-label {
+  font-size: 25px;
+}
+
+/* --- For checkbox --- */
+  /* The checkbox-container */
+  .checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Hide the browser's default checkbox */
+  .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+
+  /* On mouse-over, add a grey background color */
+  .checkbox-container:hover input ~ .checkmark {
+    background-color: #ddd;
+  }
+
+  /* When the checkbox is checked, add a blue background */
+  .checkbox-container input:checked ~ .checkmark {
+    background-color: DodgerBlue;
+  }
+
+  /* When the checkbox is checked and u hover, add a blue background */
+  .checkbox-container input:checked ~ .checkmark:hover {
+    background-color: #1b81e5;
+  }
+
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  /* Show the checkmark when checked */
+  .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  /* Style the checkmark/indicator */
+  .checkbox-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+
+/* --- For selection --- */
+  /*the container must be positioned relative:*/
+  .custom-select {
+    position: relative;
+  }
+
+  .custom-select select {
+    display: none;  /*hide original SELECT element:*/
+  }
+
+  .select-selected {
+    background-color: DodgerBlue;
+  }
+
+  /*style the arrow inside the select element:*/
+  .select-selected:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+  }
+
+  /*point the arrow upwards when the select box is open (active):*/
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #fff transparent;
+    top: 7px;
+  }
+
+  /*style the items (options), including the selected item:*/
+  .select-items div,.select-selected {
+    color: #fff;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /*style items (options):*/
+  .select-items {
+    position: absolute;
+    background-color: DodgerBlue;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+
+  /*hide the items when the select box is closed:*/
+  .select-hide {
+    display: none;
+  }
+
+  .select-items div:hover, .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
