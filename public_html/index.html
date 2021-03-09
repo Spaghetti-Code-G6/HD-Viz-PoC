@@ -15,67 +15,71 @@
     <script src="db_connection.js" type="text/javascript"></script>
 
     <script src="jquery.tabshort.js" type="text/javascript"></script>
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
+
 <body onload="main()">
 
-<h1>HD - Viz</h1>
+    <h1>HD - Viz</h1>
 
-<div id="selectors">
-    <div class="form-inserimento">
-        <span class="menu-label">Carica file</span>
-        <form action='/file' encType="multipart/form-data" id='uploadForm' method='post' ref='uploadForm'>
-            <input id="csvFile" name="csvFile" type="file"/>
-            <input onclick="sendData()" type="button" value='Carica'/>
-        </form>
+    <div id="selectors">
+        <div class="form-inserimento">
+            <span class="menu-label">Carica file</span>
+            <form action='/file' encType="multipart/form-data" id='uploadForm' method='post' ref='uploadForm'>
+                <input id="csvFile" name="csvFile" type="file" />
+                <input onclick="sendData()" type="button" value='Carica' />
+            </form>
+        </div>
+
+        <div class="form-inserimento">
+            <span class="menu-label"> Carica da database </span>
+            <form id="dbForm">
+                <!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
+            </form>
+        </div>
+    </div>
+    <div class="tab" id="tab-menu">
+        <button class="tablinks active" onclick="openPage(event, 'ScatterPlot')">Scatter Plot Matrix</button>
+        <button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>
+        <button class="tablinks" onclick="openPage(event, 'HeatMap')">Heat Map</button>
+        <button class="tablinks" onclick="openPage(event, 'DistanceMap')">Distance Map</button>
+        <button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Proiezione Lineare</button>
     </div>
 
-    <div class="form-inserimento">
-        <span class="menu-label"> Carica da database </span>
-        <form id="dbForm">
-                  <!-- Qui vanno le selezioni fornite da server sulle configurazioni possibili -->
-        </form>
+    <div class="tabcontent" id="ScatterPlot">
+        <h2>Scatter plot</h2>
+        <div id="tooltip"></div>
+        <div id='scatter_plot_content'></div>
+        <div id="dimensionSelection">
+            <h2>MENU</h2>
+        </div>
     </div>
-</div>
-<div class="tab" id="tab-menu">
-    <button class="tablinks active" onclick="openPage(event, 'ScatterPlot')">Scatter Plot Matrix</button>
-    <button class="tablinks" onclick="openPage(event, 'ForceField')">Force Field</button>
-    <button class="tablinks" onclick="openPage(event, 'HeatMap')">Heat Map</button>
-    <button class="tablinks" onclick="openPage(event, 'DistanceMap')">Distance Map</button>
-    <button class="tablinks" onclick="openPage(event, 'ProiezioneLineare')">Proiezione Lineare</button>
-</div>
 
-<div class="tabcontent" id="ScatterPlot">
-    <h2>Scatter plot</h2>
-    <div id="tooltip"></div>
-    <div id='scatter_plot_content'></div>
-    <div id="dimensionSelection"><h2>MENU</h2></div>
-</div>
+    <div class="tabcontent" id="ForceField">
+        <h2>Force Field</h2>
+        <p>Coming soon...</p>
+    </div>
 
-<div class="tabcontent" id="ForceField">
-    <h2>Force Field</h2>
-    <p>Coming soon...</p>
-</div>
+    <div class="tabcontent" id="HeatMap">
+        <h2>Heat Map</h2>
+        <p>Coming soon...</p>
+    </div>
 
-<div class="tabcontent" id="HeatMap">
-    <h2>Heat Map</h2>
-    <p>Coming soon...</p>
-</div>
+    <div class="tabcontent" id="DistanceMap">
+        <h2>Distance Map</h2>
+        <p>Coming soon...</p>
+    </div>
 
-<div class="tabcontent" id="DistanceMap">
-    <h2>Distance Map</h2>
-    <p>Coming soon...</p>
-</div>
+    <div class="tabcontent" id="ProiezioneLineare">
+        <h2>Proiezione Lineare Multiasse</h2>
+        <p>Coming soon...</p>
+    </div>
 
-<div class="tabcontent" id="ProiezioneLineare">
-    <h2>Proiezione Lineare Multiasse</h2>
-    <p>Coming soon...</p>
-</div>
+    <script>
 
-<script>
-
-</script>
+    </script>
 </body>
+
 </html>

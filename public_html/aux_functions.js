@@ -17,7 +17,7 @@ function makeReadableGlobal(str) {
 	return aux;
 }
 
-function takeValues(){
+function takeValues() {
 
 	let j = 0;
 	const aux_data = dataset[0];

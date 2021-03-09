@@ -85,9 +85,9 @@ function plot(key = non_numeric_keys[0]) {
 
             //etichette per l'asse x
             svg.append("text")
-                .attr("transform", "translate("
-                    + (((tags.length) * xSpaceForSingleChart) - ((tags.length - i) * xSpaceForSingleChart) + ySpaceForSingleChart)
-                    + ", " + (`${heigth}` - 20) + ")")
+                .attr("transform", "translate(" +
+                    (((tags.length) * xSpaceForSingleChart) - ((tags.length - i) * xSpaceForSingleChart) + ySpaceForSingleChart) +
+                    ", " + (`${heigth}` - 20) + ")")
                 .style("text-anchor", "end")
                 .attr("fill", "#635F5D")
                 .text(makeReadableGlobal(reverse_label[i].toString()));
@@ -99,8 +99,8 @@ function plot(key = non_numeric_keys[0]) {
 
             array_dataset.forEach((row) => {
                 let temp_coord = [];
-                temp_coord.push(row[j]);	// x
-                temp_coord.push(row[i]);	// y
+                temp_coord.push(row[j]); // x
+                temp_coord.push(row[i]); // y
                 coord.push(temp_coord);
             });
 
@@ -119,17 +119,17 @@ function plot(key = non_numeric_keys[0]) {
         const y_scale = y_scales[y_scale_index];
 
 
-        const x = padding
-            + x_scale(element[0])
-            + (tags.length - 1) * space_between_charts
-            + (tags.length - 1) * xSpaceForSingleChart
-            - x_scale_index * space_between_charts
-            - x_scale_index * xSpaceForSingleChart;
+        const x = padding +
+            x_scale(element[0]) +
+            (tags.length - 1) * space_between_charts +
+            (tags.length - 1) * xSpaceForSingleChart -
+            x_scale_index * space_between_charts -
+            x_scale_index * xSpaceForSingleChart;
 
-        const y = padding
-            + y_scale(element[1])
-            + y_scale_index * vertical_space
-            + y_scale_index * ySpaceForSingleChart;
+        const y = padding +
+            y_scale(element[1]) +
+            y_scale_index * vertical_space +
+            y_scale_index * ySpaceForSingleChart;
 
         let color;
 
@@ -282,9 +282,11 @@ function drawScatterPlot(dataset) {
                 tags.push(key); // printed dimensions
             }
             element.innerHTML += `
-				<label class="checkbox-container" for='${key}'> ` + makeReadable({key})
-                + `<input id='${key}' type='checkbox' name='${key}'` + ((tags.includes(key)) ? "checked" : "")
-                + ` onchange = 'adaptScatterPlot(this, checked)' value='${key}'/>
+				<label class="checkbox-container" for='${key}'> ` + makeReadable({
+                    key
+                }) +
+                `<input id='${key}' type='checkbox' name='${key}'` + ((tags.includes(key)) ? "checked" : "") +
+                ` onchange = 'adaptScatterPlot(this, checked)' value='${key}'/>
 					<span class="checkmark"></span>
 				</label>`;
         });

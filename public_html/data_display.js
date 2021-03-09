@@ -21,7 +21,9 @@ function main() {
 /** Prende i dati della scorsa operazione fatta su HdViz (molto prototipo al momento in quanto sarà più grosso)
  *    però funziona.*/
 function lastSession() {
-    fetch('/prevSession', {method: 'GET'})
+    fetch('/prevSession', {
+            method: 'GET'
+        })
         .then(res => res.json())
         .then(res => {
             dataset = [];

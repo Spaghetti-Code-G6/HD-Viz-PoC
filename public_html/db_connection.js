@@ -3,7 +3,10 @@ let configs = [];
 function getAll() {
 
     fetch('/available', {
-        method: 'POST', headers: {'Content-Type': 'application/json'}
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     }).then(res => res.json()).then(data => {
         let element = document.getElementById('dbForm');
         data.options.forEach(dat => {
@@ -23,8 +26,13 @@ function getAll() {
 function doSelection(id) {
 
     fetch('/selected', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({selectedConfig: id})
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            selectedConfig: id
+        })
     }).then(res => res.json()).then(res => {
         dataset = res.data
         drawScatterPlot(res.data)
