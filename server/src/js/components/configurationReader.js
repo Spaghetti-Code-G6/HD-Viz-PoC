@@ -52,7 +52,11 @@ config.secureSend = () => {
     let returnObject = [];
 
     config.forEach((val, index) =>
-        returnObject.push({name: val.name, description: val.description, index: index}));
+        returnObject.push({
+            name: val.name,
+            description: val.description,
+            index: index
+        }));
 
     return returnObject;
 

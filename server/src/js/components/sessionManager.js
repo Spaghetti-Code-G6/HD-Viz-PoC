@@ -27,7 +27,7 @@ function deleteTemp(key, value) {
  *  Questa condizione si avvera quando il server va in crash e non ha la possibilità di eliminare i temp. */
 (() => {
     fs.readdir('server/csv/tmp/', (err, files) => {
-        if (err) throw  err;
+        if (err) throw err;
         files.forEach(file => fs.unlink('server/csv/tmp/'.concat(file), err => {
             if (err) throw err;
         }))
@@ -35,16 +35,21 @@ function deleteTemp(key, value) {
 })(); // Chiamata a funzione.
 
 /** @description Storage nella quale vengono salvate le sessioni attualmente valide. */
-let sessionStore = new (memoryStore(session))({
+let sessionStore = new(memoryStore(session))({
     checkPeriod: 86400000, // Prune expired entries every 24h ( eliminazione da memoria).
-    noDisposeOnSet: true, dispose: deleteTemp  /* Dispose è operazione che avviene sempre quando si elimina.*/
+    noDisposeOnSet: true,
+    dispose: deleteTemp /* Dispose è operazione che avviene sempre quando si elimina.*/
 });
 
 /** I dati su req.session sono salati a lato server (sicuro) nel nostro sessionStore (credo).*/
 sessionRouter.use(session({
 
-    cookie: {maxAge: 1800000}, /* Età massima del cookie prima di perdere validità. */
-    store: sessionStore,    /* Magazzino delle sessioni. */
+    cookie: {
+        maxAge: 1800000
+    },
+    /* Età massima del cookie prima di perdere validità. */
+    store: sessionStore,
+    /* Magazzino delle sessioni. */
     unset: 'destroy',
     secret: 'Spaghetti',
     saveUninitialized: true,
@@ -53,7 +58,9 @@ sessionRouter.use(session({
 }));
 
 /** Ottieni i dati della sessione.*/
-sessionRouter.use('/session', (req, res) => res.send({sess: req.session}));
+sessionRouter.use('/session', (req, res) => res.send({
+    sess: req.session
+}));
 
 /** @description Setup of the current user session with its data.
  *  @param req: Request passed that has a session property.
@@ -64,15 +71,15 @@ sessionRouter.use('/session', (req, res) => res.send({sess: req.session}));
 export function setSession(req, type, metadata, src = null, index = null) {
     //TODO: Remove promise and use callback.
     return new Promise(((resolve, reject) => {
-        req.session.regenerate((err) =>{
+        req.session.regenerate((err) => {
             /** Everything in the callback happens after the regenerate function takes place.*/
-            if(err) reject(err);
+            if (err) reject(err);
 
             req.session.hdConfig = type;
             req.session.metadata = metadata
 
-            if (type === 'csv')  req.session.hdFilePath = src;
-            else if (type  === 'db') req.session.hdDbSelection = index;
+            if (type === 'csv') req.session.hdFilePath = src;
+            else if (type === 'db') req.session.hdDbSelection = index;
             resolve(true);
         })
     }))
